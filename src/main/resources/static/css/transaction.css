@@ -1,0 +1,28 @@
+.container-fluid{
+    margin:0 90px;
+}
+.panel-heading{
+    background-color: #a6d2f2;
+}
+.panel-title{
+    color: #315d7d;
+}
+.main{
+    margin: 30px 96px;
+    background-color: white;
+    padding-top: 10px;
+}
+.prods
+{
+    border-bottom: 1px solid #eaeaea;
+}
+.prods img
+{
+    max-width: 200px;
+    margin: 20px;
+    border-radius: 5px;
+}
+.prods .caption
+{
+    display: inline-block;
+}
