@@ -1,14 +1,21 @@
 package com.cassiezys.transaction.controller;
 
+import com.cassiezys.transaction.dto.ProductionDTO;
+import com.cassiezys.transaction.mapper.ProductionMapper;
 import com.cassiezys.transaction.model.User;
+import com.cassiezys.transaction.service.ProductionService;
+import com.cassiezys.transaction.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Copyright，2020
@@ -18,23 +25,83 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class IndexController {
 
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProductionService productionService;
+
     @GetMapping("/")
     public String index(
             Model model){
+        List<ProductionDTO> productionDTOS = productionService.allProducts();
+        model.addAttribute("productions",productionDTOS);
         return "index";
     }
 
+    /**
+     * 注册
+     * @param model
+     * @return
+     */
     @GetMapping("/register")
-    public String register(){
-        return "login";
+    public String register(Model model){
+        model.addAttribute("title","register");
+        return "register";
+    }
+    @PostMapping("/register")
+    public String doRegister(@RequestParam(name="accountId",required=false)String accountId,
+                           @RequestParam(name="password",required=false)String password,
+                           @RequestParam(name="username",required = false)String username,
+                           Model model){
+        User userInput = new User();
+        userInput.setName(username);
+        userInput.setAccountId(accountId);
+        userInput.setPassword(password);
+        int registerCode = userService.register(userInput);
+        if(registerCode==1){
+            model.addAttribute("msg","创建成功，可以登录");
+            return "redirect:/";
+        }else{
+            model.addAttribute("title","register");
+            model.addAttribute("error","用户名已经被使用");
+            System.out.println("注册失败");
+            return "register";
+        }
     }
 
+
+    /**
+     * 登录
+     * @param model
+     * @return
+     */
     @GetMapping("/login")
-    public String login(HttpServletRequest request){
-        User user = new User();
-        user.setName("znn");
-        request.getSession().setAttribute("user",user);
-        return "redirect:/";
+    public String login(Model model){
+        model.addAttribute("title","login");
+        return "register";
+    }
+
+    @PostMapping("/login")
+    public String doLogin(@RequestParam(name="accountId",required=false)String accountId,
+                          @RequestParam(name="password",required=false)String password,
+                          @RequestParam(name="checkbox",required=false,defaultValue="1")Integer checkbox,
+                          HttpServletRequest request,
+                          HttpServletResponse response,
+                          Model model){
+        User userInput = new User();
+        userInput.setAccountId(accountId);
+        userInput.setPassword(password);
+        User user = userService.getUser(userInput);
+        if(user !=null){
+            response.addCookie(new Cookie("token",user.getToken()));
+            request.getSession().setAttribute("user",user);
+            return "redirect:/";
+        }else{
+            model.addAttribute("title","login");
+            model.addAttribute("error","用户名或密码错误");
+            System.out.println("登录失败");
+            return "register";
+        }
     }
 
     @GetMapping("/logout")

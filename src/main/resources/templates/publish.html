@@ -2,10 +2,239 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>发布新商品</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <head th:insert="~{import::importhead}"></head>
+    <head th:insert="~{import::javaeximport}"></head>
 </head>
+
 <body>
+<!--head 头部分-->
+<div th:insert="~{head::head}"></div>
+<!--添加商品-->
+<div class="container-fluid content-main">
+    <div class="panel-heading">
+        <h3 class="panel-title">发布商品</h3>
+    </div>
+
+    <form action="/publish" method="post" enctype="multipart/form-data">
+        <input class="hidden" name="id" th:value="${id}">
+        <!--上传图片-->
+        <div class="list-content">
+            <div class="block">
+                <div class="main">
+                    <div id="container" class="file-container">
+                        <div class="cover">
+                            <!--如果不需要回显图片，src留空即可-->
+                            <img class="upload-img" th:src="@{${pic}}" th:if="${pic} != null" /><div class="cover-text">上传封面</div>
+                            <img th:if="${pic} == null"  class="upload-img-cover" th:src="@{images/download.png}"/><div class="cover-text">上传封面</div>
+
+                            <input type="file" class="file" name="pic" id="upload" accept="image/gif, image/jpeg, image/jpg, image/png">
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    $("#upload").change(function () {
+                        var filePath = $(this)[0].files[0];// 获取input上传的文件
+                        if (!filePath.name) {
+                            alter("未选择封面");
+                        } else {
+                            var url = window.URL.createObjectURL(filePath); //将上传的文件转化为url
+                            $('#container img').attr('src', url);
+                            $('#container img').attr('class',"upload-img");
+                            console.log(url);
+                        }
+                    });
+                    javaex.upload({
+                        type : "image",
+                        id : "upload",	// <input type="file" />的id
+                        dataType : "url",	// 返回的数据类型：base64 或 url
+                        url : "upload", // 请求路径
+                        param : "file", // 参数名称，SSM中与MultipartFile的参数名保持一致
+                        callback : function(rtn) {
+                            // 后台返回的数据
+                            console.log(rtn);
+                            /*    var imgUrl = rtn.data.imgUrl;
+                                $("#container img").attr("src", imgUrl);
+                                $("#cover").val(imgUrl);*/
+                            }
+                    });
+                </script>
+            </div>
+        </div>
+
+        <!--选择城市-->
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon good-title">选择城市</div>
+                <select class="form-control" name="city" >
+                    <option th:text="${city}" th:if="${city!=null}" th:value="${city}"></option>
+                    <option th:text="请选择" th:if="${city==null}"></option>
+                    <option th:each="city:${cities}" th:text="${city}" th:value="${city}"></option>
+                </select>
+                <div class="input-group-addon">注：没有找到对应城市时，请选择“全球”</div>
+            </div>
+        </div>
+
+        <!--商品名称-->
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon good-title">商品名称</div>
+                <input type="text" class="form-control good" th:value="${title}" name="title" placeholder="商品名称">
+                <div class="input-group-addon">14个字以内</div>
+            </div>
+        </div>
+
+        <!--商品详情-->
+        <div class="form-group">
+            <div class="input-group-addon good-title">商品详情</div>
+            <textarea name="description" class="form-control good" th:value="${description}" rows="3"
+                      placeholder="请输入商品详情..."></textarea>
+        </div>
+
+        <!--价格-->
+        <div class="form-group">
+            <div class="input-group">
+                <div class="good-sep">
+                    <div class="input-group-addon good-title">价格</div>
+                    <input name="price" type="text" class="form-control good" th:value="${price}" placeholder="请输入价格">
+                    <div class="input-group-addon">元</div>
+                </div>
+                <div class="good-sep">
+                    <div class="input-group-addon good-title">原价</div>
+                    <input name="origprice" type="text" class="form-control good" th:value="${origprice}"
+                           placeholder="请输入原价">
+                    <div class="input-group-addon">元</div>
+                </div>
+            </div>
+        </div>
+
+        <!--分类-->
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon good-title">分类</div>
+                <select class="form-control" name="category">
+                    <option th:text="${category}" th:if="${category!=null}" th:value="${category}"></option>
+                    <option th:text="请选择" th:if="${category==null}"></option>
+                    <option th:each="category:${categories}" th:text="${category}" th:value="${category}"></option>
+                </select>
+            </div>
+        </div>
+
+        <!--交易方式-->
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon good-title">交易方式</div>
+                <div class="radio">
+                    <label class="radio-inline">
+                        <input type="radio" name="payway" value="online" th:checked="${payway=='online'}"> 线上交易
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="payway" value="offline" th:checked="${payway=='offline'}"> 线下交易
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="payway" value="bothline" th:checked="${payway=='bothline'}">线上交易/线下交易
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon good-title">交易方式</div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist" th:if="${payway==null}">
+                    <li role="presentation" class="active">
+                        <a href="#online" role="tab" data-toggle="tab">在线交易</a></li>
+                    <li role="presentation">
+                        <a href="#offline" role="tab" data-toggle="tab">线下交易</a></li>
+                    <li role="presentation">
+                        <a href="#bothline" role="tab" data-toggle="tab">在线交易/线下交易</a>
+                    </li>
+                </ul>
+                <ul class="nav nav-tabs" role="tablist" th:if="${payway!=null}">
+                    <li role="presentation" th:class="${payway == 'online'}?'active':''">
+                        <a href="#online" role="tab" data-toggle="tab"
+                           th:if="${payway=='online'}?'aria-expanded=true':''">在线交易</a></li>
+                    <li role="presentation" th:class="${payway == 'offline'}?'active':''">
+                        <a href="#offline" role="tab" data-toggle="tab"
+                           th:if="${payway=='offline'}?'aria-expanded=true':''">线下交易</a></li>
+                    <li role="presentation" th:class="${payway == 'bothline'}?'active':''">
+                        <a href="#bothline" role="tab" data-toggle="tab"
+                           th:if="${payway=='bothline'}?'aria-expanded=true':''">在线交易/线下交易</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" th:class="${payway=='online'}? 'tab-pane active':'tab-pane'" id="online">
+                    <div class="paidway input-group">
+              <!--          <div class="paid-sep">
+                            <div class="input-group-addon good-title">微信号</div>
+                            <input name="wechat" type="text" class="form-control good" th:value="${wechat}"
+                                   placeholder="请输入微信号">
+                        </div>-->
+                        <div class="paid-sep">
+                            <div class="input-group-addon good-title">手机号</div>
+                            <input name="tele" type="text" class="form-control good" th:value="${tele}"
+                                   placeholder="请输入手机号">
+                        </div>
+                        <div class="paid-sep">
+                            <div class="input-group-addon good-title">QQ号</div>
+                            <input name="tencent" type="text" class="form-control good" th:value="${tencent}"
+                                   placeholder="请输入QQ号">
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" th:class="${payway=='offline'}? 'tab-pane active':'tab-pane'" id="offline">
+                    <div class="paidway">
+                        <div class="input-group">
+                            <div class="input-group-addon good-title">交易地址</div>
+                            <input name="address" type="text" class="form-control good" th:value="${address}"
+                                   placeholder="请输入交易地址">
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel"  th:class="${payway=='bothline'}? 'tab-pane active':'tab-pane'" id="bothline">
+                    <div class="paidway">
+                        <div class="form-group">
+                      <!--      <div class="input-group">
+                                <div class="input-group-addon good-title">交易地址</div>
+                                <input name="address" type="text" class="form-control good" th:value="${address}"
+                                       placeholder="请输入交易地址">
+                            </div>
+                        </div>-->
+                        <div class="input-group">
+                            <div class="paid-sep">
+                                <div class="input-group-addon good-title">手机号</div>
+                                <input name="tele" type="text" class="form-control good" th:value="${tele}"
+                                       placeholder="请输入手机号">
+                            </div>
+                            <div class="paid-sep">
+                                <div class="input-group-addon good-title">QQ号</div>
+                                <input name="tencent" type="text" class="form-control good" th:value="${tencent}"
+                                       placeholder="请输入QQ号">
+                            </div>
+                            <div class="paid-sep">
+                                <div class="input-group-addon good-title">微信号</div>
+                                <span th:text="${wechat}"></span>
+                                <input name="wechat" type="text" class="form-control good" th:value="${wechat}"
+                                       placeholder="请输入微信号">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="btn-publish">
+            <span class="alert alert-danger fl" th:if="${error !=null}" th:text="${error}"></span>
+
+            <button type="submit" class="btn btn-success fr btn-publish">确认发布</button>
+        </div>
+
+    </form>
+</div>
 
 </body>
 </html>

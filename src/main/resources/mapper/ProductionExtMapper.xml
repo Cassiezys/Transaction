@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cassiezys.transaction.mapper.ProductionExtMapper">
+    <resultMap id="BaseResultMap" type="com.cassiezys.transaction.model.Production">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified" />
+        <result column="creator" jdbcType="BIGINT" property="creator" />
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
+        <result column="view_count" jdbcType="INTEGER" property="viewCount" />
+        <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+        <result column="price" jdbcType="REAL" property="price" />
+        <result column="origprice" jdbcType="REAL" property="origprice" />
+        <result column="tele" jdbcType="BIGINT" property="tele" />
+        <result column="tencent" jdbcType="BIGINT" property="tencent" />
+        <result column="wechat" jdbcType="VARCHAR" property="wechat" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="payway" jdbcType="VARCHAR" property="payway" />
+        <result column="category" jdbcType="VARCHAR" property="category" />
+    </resultMap>
+    <select id="selectByQuery" parameterType="com.cassiezys.transaction.dto.ProductQueryDTO" resultMap="BaseResultMap">
+        select * from production limit #{page},#{size}
+    </select>
+</mapper>
