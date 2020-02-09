@@ -20,6 +20,12 @@ public class ProductionController {
     @Autowired
     private ProductionService productionService;
 
+    /**
+     * 查看商品详情
+     * @param proid 获取商品id
+     * @param model
+     * @return product.html 展示productiondto
+     */
     @GetMapping("/production/{proid}")
     public String product(@PathVariable(name = "proid")Long proid,
                           Model model){

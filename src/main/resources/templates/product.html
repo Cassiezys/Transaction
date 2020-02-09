@@ -78,12 +78,12 @@
                     </div>
                     <hr>
 <br>
-                    <div class="purchase">
-                        <a class="purchase-control" id="sub" href="javascript:void(0);"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
-                        <input class="purchase-input" type="text" th:value="1" id="inputNum">
-                        <a class="purchase-control" id="add" href="javascript:void(0);">+</a>
+                    <div class="purchase row">
+                        <a class="col-lg-4 col-md-4 col-sm-4 col-xs-4 purchase-control" id="sub" href="javascript:void(0);"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></a>
+                        <input class="col-lg-4 col-md-4 col-sm-4 col-xs-4 purchase-input" type="text" th:value="1" id="inputNum">
+                        <a class="col-lg-4 col-md-4 col-sm-4 col-xs-4 purchase-control" id="add" href="javascript:void(0);"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
                     </div>
-<br>
+
                     <div class="operateButton">
                         <button type="button" class="btn btn-danger btn-addcar"><span class="icon-add_shopping_cart" style="color:white;"></span> 加入购物车</button>
                         <a href="#" class="btn-collect">收藏</a>
@@ -95,7 +95,7 @@
                     卖家：<span th:text="${productiondto.user.name}"></span> |
                     发布时间：<span th:text="${#dates.format(productiondto.gmtCreate,'yyyy-MM-dd HH:mm')}">13 May 2011</span> |
                     阅读数 ：<span th:text="${productiondto.viewCount}"></span>|</span>
-                        <a th:href="@{'/publish/'+${productiondto.id}}"
+                        <a th:href="@{'/publish/'+${productiondto.id}}" class="transaction-menu"
                            th:if="${session.user != null && session.user.id == productiondto.creator}">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑</span>
                         </a>
@@ -133,7 +133,6 @@
 
     </div>
 </div>
-
 
 </div>
 

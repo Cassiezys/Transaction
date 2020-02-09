@@ -2,6 +2,7 @@ package com.cassiezys.transaction.controller;
 
 import com.cassiezys.transaction.cache.CategoryCache;
 import com.cassiezys.transaction.cache.CityCache;
+import com.cassiezys.transaction.dto.ProductionDTO;
 import com.cassiezys.transaction.model.Production;
 import com.cassiezys.transaction.model.User;
 import com.cassiezys.transaction.service.ProductionService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +39,36 @@ public class PublishController {
         return "publish";
     }
 
+    /**
+     * 打开修改页面
+     * @param proId 商品pid
+     * @param model 返回productdto
+     * @return publish.html
+     */
+    @GetMapping("/publish/{proId}")
+    public String doModify(@PathVariable(name = "proId")Long proId,
+                           Model model){
+        ProductionDTO productionDTO = productionService.findByPid(proId);
+        model.addAttribute("cities", CityCache.get());
+        model.addAttribute("categories", CategoryCache.get());
+        model.addAttribute("city", productionDTO.getCity());
+        model.addAttribute("title", productionDTO.getTitle());
+        model.addAttribute("description", productionDTO.getDescription());
+        model.addAttribute("category", productionDTO.getCategory());
+        model.addAttribute("price", productionDTO.getPrice());
+        model.addAttribute("origprice", productionDTO.getOrigprice());
+        model.addAttribute("tele", productionDTO.getTele());
+        model.addAttribute("tencent", productionDTO.getTencent());
+        model.addAttribute("wechat", productionDTO.getWechat());
+        model.addAttribute("address", productionDTO.getAddress());
+        model.addAttribute("payway", productionDTO.getPayway());
+        model.addAttribute("pictext",productionDTO.getPicUrl());
+        String imgUrl = "/" + productionDTO.getPicUrl();
+        model.addAttribute("pic", imgUrl);
+        model.addAttribute("pid",productionDTO.getId());
+        return "publish";
+    }
+
     /*新建/更新发布*/
     @PostMapping("/publish")
     public String doPublish(@RequestParam(value = "city", required = false) String city,
@@ -51,7 +83,8 @@ public class PublishController {
                             @RequestParam(value = "category", required = false) String category,
                             @RequestParam(value = "address", required = false) String address,
                             @RequestParam(value = "payway", required = false) String payway,
-                            @RequestParam(value = "id", required = false) Long id,
+                            @RequestParam(value = "pid", required = false) Long pid,
+                            @RequestParam(value = "pictext" , required =  false)String pictext,
                             @RequestParam Map param,
                             HttpServletRequest request,
                             Model model
@@ -69,8 +102,8 @@ public class PublishController {
         model.addAttribute("wechat", wechat);
         model.addAttribute("address", address);
         model.addAttribute("payway", payway);
-        model.addAttribute("id",id);
-        if (pic.isEmpty()) {
+        model.addAttribute("pid",pid);
+        if (pic.isEmpty()&&StringUtils.isBlank(pictext)) {
             model.addAttribute("error", "图片不能为空");
             return "publish";
         }
@@ -120,13 +153,16 @@ public class PublishController {
             model.addAttribute("error", "请先登录");
             return "publish";
         }
-        String fileName = pic.getOriginalFilename();
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        //fileName= "zhenbao-"+UUID.randomUUID()+suffixName;
-        fileName = user.getAccountId()+"/zhenbao-" + fileName;
-        productionService.ProductionService(user.getAccountId());
-        String imgUrl = "upload-dir/" + fileName;//重命名的名字
-        model.addAttribute("pic", imgUrl);
+        String imgUrl =pictext;
+        if(!pic.isEmpty()){
+            String fileName = pic.getOriginalFilename();
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            //fileName= "zhenbao-"+UUID.randomUUID()+suffixName;
+            fileName = user.getAccountId()+"/zhenbao-" + fileName;
+            productionService.ProductionService(user.getAccountId());
+            imgUrl = "upload-dir/" + fileName;//重命名的名字
+            model.addAttribute("pic", imgUrl);
+        }
 
         Production production = new Production();
         production.setCity(city);
@@ -142,12 +178,16 @@ public class PublishController {
         production.setCategory(category);
         production.setAddress(address);
         production.setPayway(payway);
-        production.setId(id);
-        try {
-            productionService.createOrUpdate(pic.getInputStream(), production);
-        } catch (IOException e) {
-            e.printStackTrace();
+        production.setId(pid);
+        if(!pic.isEmpty()){
+            //pic不是空才重新上传图片
+            try {
+                productionService.uploadPic(pic.getInputStream(),production);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        productionService.createOrUpdate(production);
         return "redirect:/";
     }
 }

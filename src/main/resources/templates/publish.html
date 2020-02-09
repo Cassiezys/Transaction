@@ -17,7 +17,7 @@
     </div>
 
     <form action="/publish" method="post" enctype="multipart/form-data">
-        <input class="hidden" name="id" th:value="${id}">
+        <input class="hidden" name="pid" th:value="${pid}">
         <!--上传图片-->
         <div class="list-content">
             <div class="block">
@@ -26,9 +26,11 @@
                         <div class="cover">
                             <!--如果不需要回显图片，src留空即可-->
                             <img class="upload-img" th:src="@{${pic}}" th:if="${pic} != null" /><div class="cover-text">上传封面</div>
-                            <img th:if="${pic} == null"  class="upload-img-cover" th:src="@{images/download.png}"/><div class="cover-text">上传封面</div>
+                            <img th:if="${pic} == null"  class="upload-img-cover" th:src="@{/images/download.png}"/><div class="cover-text">上传封面</div>
 
                             <input type="file" class="file" name="pic" id="upload" accept="image/gif, image/jpeg, image/jpg, image/png">
+                            <input type="hidden" name="pictext" th:value="${pictext}" />
+                            <span th:text="${pic}"></span>
                         </div>
                     </div>
                 </div>
@@ -87,7 +89,7 @@
         <!--商品详情-->
         <div class="form-group">
             <div class="input-group-addon good-title">商品详情</div>
-            <textarea name="description" class="form-control good" th:value="${description}" rows="3"
+            <textarea name="description" class="form-control good" th:text="${description}" rows="3"
                       placeholder="请输入商品详情..."></textarea>
         </div>
 

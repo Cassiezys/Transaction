@@ -8,7 +8,6 @@ import com.cassiezys.transaction.mapper.UserMapper;
 import com.cassiezys.transaction.model.Production;
 import com.cassiezys.transaction.model.ProductionExample;
 import com.cassiezys.transaction.model.User;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,11 @@ public class ProductionService {
         if(StringUtils.isBlank(account_Id)){
             throw new CustomizeCodeException(ErrorCodeEnumImp.NO_LOGIN);
         }
-        filePath=filePath+"/"+account_Id;
+        if(filePath.contains(account_Id)){
+            filePath=filePath;
+        }else{
+            filePath=filePath+"/"+account_Id;
+        }
         this.rootLocation = Paths.get(filePath);
         try {
             Files.createDirectories(rootLocation);
@@ -55,11 +58,9 @@ public class ProductionService {
     /**
      * 添加商品
      *
-     * @param inputStream 图片输入流 添加到"src/main/resources/static/upload-dir/account_id"
      * @param production  商品model
      */
-    public void createOrUpdate(InputStream inputStream, Production production) {
-        String fileName = production.getPicUrl().substring(production.getPicUrl().lastIndexOf("/") + 1);
+    public void createOrUpdate(Production production) {
         if (production.getId() == null) {
             //create an item
             production.setGmtCreate(System.currentTimeMillis());
@@ -95,6 +96,15 @@ public class ProductionService {
             productionMapper.updateByExampleSelective(updatePro, productionExample);
 
         }
+    }
+
+    /**
+     * 单独图片上传
+     * @param inputStream
+     * @param production
+     */
+    public void uploadPic(InputStream inputStream, Production production) {
+        String fileName = production.getPicUrl().substring(production.getPicUrl().lastIndexOf("/") + 1);
         try {
             Files.copy(inputStream, this.rootLocation.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -133,14 +143,14 @@ public class ProductionService {
         ProductionDTO productionDTO = new ProductionDTO();
         Production thisPrdt = productionMapper.selectByPrimaryKey(proid);
         if(thisPrdt == null){
-            throw  new CustomizeCodeException(ErrorCodeEnumImp.NO_PRODUCTION_ID);
+            throw  new CustomizeCodeException(ErrorCodeEnumImp.PRODUCTION_NOT_FOUND);
         }
         User thisUser = userMapper.selectByPrimaryKey(thisPrdt.getCreator());
         BeanUtils.copyProperties(thisPrdt,productionDTO);
         productionDTO.setUser(thisUser);
-
         return productionDTO;
     }
+
 }
 
 

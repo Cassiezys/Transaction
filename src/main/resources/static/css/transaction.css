@@ -226,28 +226,27 @@
 }
 .purchase
  {
-     position: relative;
-     height: 42px;
-     width: 95px;
-     border: 1px solid #b3b3b3;
-     background-color: #f9f8f8;
- }
+    width: 186px;
+    margin-left: 10px;
+    position: relative;
+    height: 42px;
+    border: 1px solid #b3b3b3;
+    background-color: #f9f8f8;
+    text-align: center;
+}
 .purchase-control{
-    height: 28px;
-    line-height: 37px;
+    line-height: 42px;
     font-size: 28px;
-    margin: 0 3px;
 }
 .purchase input
 {
-    width: 30px;
-    height: 35px;
+    height: 40px;
     text-align: center;
     border: 0px solid #ccc;
 }
 .operateButton
 {
-    padding: 15px 0 10px;
+    padding: 25px 0 10px;
 }
 .btn-addcar
 {
@@ -275,4 +274,8 @@
 {
     line-height: 25px;
     padding: 14px 0 0 0;
+}
+.transaction-menu {
+    color: #999;
+    font-size: 13px;
 }
