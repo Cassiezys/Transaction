@@ -1,8 +1,11 @@
 package com.cassiezys.transaction.service;
 
+import com.cassiezys.transaction.dto.PaginationDTO;
+import com.cassiezys.transaction.dto.ProductQueryDTO;
 import com.cassiezys.transaction.dto.ProductionDTO;
 import com.cassiezys.transaction.exception.CustomizeCodeException;
 import com.cassiezys.transaction.exception.ErrorCodeEnumImp;
+import com.cassiezys.transaction.mapper.ProductionExtMapper;
 import com.cassiezys.transaction.mapper.ProductionMapper;
 import com.cassiezys.transaction.mapper.UserMapper;
 import com.cassiezys.transaction.model.Production;
@@ -32,9 +35,12 @@ public class ProductionService {
     @Autowired
     private ProductionMapper productionMapper;
     @Autowired
+    private ProductionExtMapper productionExtMapper;
+    @Autowired
     private UserMapper userMapper;
 
     private String filePath = "src/main/resources/static/upload-dir";
+    private String realPath = "src/main/resources/static/upload-dir";
 
     private Path rootLocation;
 
@@ -42,12 +48,12 @@ public class ProductionService {
         if(StringUtils.isBlank(account_Id)){
             throw new CustomizeCodeException(ErrorCodeEnumImp.NO_LOGIN);
         }
-        if(filePath.contains(account_Id)){
-            filePath=filePath;
+        if(realPath.contains(account_Id)){
+            realPath=realPath;
         }else{
-            filePath=filePath+"/"+account_Id;
+            realPath=filePath+"/"+account_Id;
         }
-        this.rootLocation = Paths.get(filePath);
+        this.rootLocation = Paths.get(realPath);
         try {
             Files.createDirectories(rootLocation);
         } catch (IOException e) {
@@ -113,15 +119,30 @@ public class ProductionService {
     }
 
     /*所有商品*/
-    public List<ProductionDTO> allProducts() {
-       /* PaginationDTO paginationDTO = new PaginationDTO();
-         ProductQueryDTO productQueryDTO = new ProductQueryDTO();
-        productQueryDTO.setPage(0);
-        productQueryDTO.setSize(5);
-        */
-       List<ProductionDTO> productionDTOS = new ArrayList<>();
-        ProductionExample productionExample = new ProductionExample();
-        List<Production> productions = productionMapper.selectByExample(productionExample);
+    public PaginationDTO addPagination(Integer page, Integer size) {
+        PaginationDTO paginationDTO = new PaginationDTO();
+        ProductQueryDTO productQueryDTO = new ProductQueryDTO();
+
+        int totalPro = productionExtMapper.countByQuery(productQueryDTO);
+        List<ProductionDTO> productionDTOS = new ArrayList<>();
+        if (totalPro % size ==0){
+            paginationDTO.setTotalPage(totalPro / size);
+        }else{
+            paginationDTO.setTotalPage(totalPro /size +1);
+        }
+        if (page <1){
+            page =1;
+        }else if(page>paginationDTO.getTotalPage()){
+            page = paginationDTO.getTotalPage();
+        }
+        paginationDTO.setPage(page);
+        paginationDTO.setPagination(totalPro,page,size);
+        /*当前页面显示的商品*/
+        Integer offset = size *(page -1);
+        productQueryDTO.setPage(offset);
+        productQueryDTO.setSize(size);
+
+        List<Production> productions = productionExtMapper.selectByQuery(productQueryDTO);
         for (Production production : productions) {
             User proUser = userMapper.selectByPrimaryKey(production.getCreator());
             ProductionDTO productionDTO = new ProductionDTO();
@@ -129,8 +150,9 @@ public class ProductionService {
             productionDTO.setUser(proUser);
             productionDTOS.add(productionDTO);
         }
+        paginationDTO.setProductionDTOS(productionDTOS);
 
-        return productionDTOS;
+        return paginationDTO;
     }
 
 

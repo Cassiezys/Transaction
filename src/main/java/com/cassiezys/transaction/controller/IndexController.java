@@ -1,7 +1,6 @@
 package com.cassiezys.transaction.controller;
 
-import com.cassiezys.transaction.dto.ProductionDTO;
-import com.cassiezys.transaction.mapper.ProductionMapper;
+import com.cassiezys.transaction.dto.PaginationDTO;
 import com.cassiezys.transaction.model.User;
 import com.cassiezys.transaction.service.ProductionService;
 import com.cassiezys.transaction.service.UserService;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * Copyright，2020
@@ -30,11 +28,20 @@ public class IndexController {
     @Autowired
     private ProductionService productionService;
 
+    /**
+     * 首页商品显示
+     * @param page 页码
+     * @param size 每页显示的数量
+     * @param model
+     * @return index.html
+     */
     @GetMapping("/")
-    public String index(
-            Model model){
-        List<ProductionDTO> productionDTOS = productionService.allProducts();
-        model.addAttribute("productions",productionDTOS);
+    public String index(@RequestParam(name = "page",defaultValue = "1")Integer page,
+                        @RequestParam(name = "size",defaultValue = "5")Integer size,
+                        Model model){
+        PaginationDTO paginationDTO = productionService.addPagination(page,size );
+
+        model.addAttribute("paginationdto",paginationDTO);
         return "index";
     }
 

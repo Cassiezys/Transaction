@@ -21,7 +21,13 @@
         <result column="payway" jdbcType="VARCHAR" property="payway" />
         <result column="category" jdbcType="VARCHAR" property="category" />
     </resultMap>
+
+    <select id="countByQuery" parameterType="com.cassiezys.transaction.dto.ProductQueryDTO" resultType="java.lang.Integer">
+        select count(*) from production
+    </select>
+
     <select id="selectByQuery" parameterType="com.cassiezys.transaction.dto.ProductQueryDTO" resultMap="BaseResultMap">
-        select * from production limit #{page},#{size}
+        select * from production
+        order by gmt_modified desc limit #{page},#{size}
     </select>
 </mapper>
