@@ -15,7 +15,9 @@
 [lombok]:pom+安装plugins
 ## Execution
 ```bash
--mybatis
+- mybatis
     mybatis-generator:generate
     mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+- 提示源码无法下载
+    mvn dependency:resolve -Dclassifier=sources
 ```  

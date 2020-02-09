@@ -165,7 +165,7 @@ public class ProductionService {
         ProductionDTO productionDTO = new ProductionDTO();
         Production thisPrdt = productionMapper.selectByPrimaryKey(proid);
         if(thisPrdt == null){
-            throw  new CustomizeCodeException(ErrorCodeEnumImp.PRODUCTION_NOT_FOUND);
+            throw new CustomizeCodeException(ErrorCodeEnumImp.PRODUCTION_NOT_FOUND);
         }
         User thisUser = userMapper.selectByPrimaryKey(thisPrdt.getCreator());
         BeanUtils.copyProperties(thisPrdt,productionDTO);

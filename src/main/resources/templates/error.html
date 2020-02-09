@@ -11,7 +11,8 @@
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
-
+<!--head 头部分-->
+<div th:insert="~{head::head}"></div>
 <div class="jumbotron">
     <h1>Error occurred!</h1>
     <p th:text="${message}">还在旋转~~~~~</p>
