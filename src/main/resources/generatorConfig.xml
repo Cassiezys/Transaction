@@ -5,6 +5,10 @@
 
 <generatorConfiguration>
     <context id="DB2Tables" targetRuntime="MyBatis3">
+
+        <!--尝试用mybatis自己提供的plugin插件来实现分页-->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost/transaction"
                         userId="root"

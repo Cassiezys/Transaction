@@ -1,0 +1,25 @@
+重写之前所有提交的
+git filter-branch --env-filter '
+OLD_EMAIL="you@example.com"
+CORRECT_NAME="zengniannian"
+CORRECT_EMAIL="457920700@qq.com"
+if [ "$GIT_COMMITTER_EMAIL" = "$OLD_EMAIL" ]
+then
+    export GIT_COMMITTER_NAME="$CORRECT_NAME"
+    export GIT_COMMITTER_EMAIL="$CORRECT_EMAIL"
+fi
+if [ "$GIT_AUTHOR_EMAIL" = "$OLD_EMAIL" ]
+then
+    export GIT_AUTHOR_NAME="$CORRECT_NAME"
+    export GIT_AUTHOR_EMAIL="$CORRECT_EMAIL"
+fi
+' --tag-name-filter cat -- --branches --tags
+
+
+
+
+第三部：git push --force --tags origin 'refs/heads/*'
+
+
+git config --global user.email "457920700@qq.com"
+git config --global user.name "zengniannian"

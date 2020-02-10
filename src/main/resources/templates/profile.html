@@ -1,15 +1,98 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>发布新商品</title>
+    <title th:text="${sectionName}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <head th:insert="~{import::importhead}"></head>
-    <head th:insert="~{import::javaeximport}"></head>
 </head>
 
 <body>
 <!--head 头部分-->
 <div th:insert="~{head::head}"></div>
+<!--主内容-->
+<div class="container-fluid content-main">
+    <div class="row">
+        <!--左边:我卖的商品||回复-->
+        <div class="col-lg-8 col-md-8 col-sm-8" >
+            <!--我的商品-->
+            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'productions'}">
+                <div class="list-group">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">分类·全部</h3>
+                    </div>
+                    <div class="prods" th:each="production:${paginationdto.productionDTOS}">
+                        <img th:src="${'/'+production.picUrl}" alt="">
+                        <div class="caption">
+                            <!--http://localhost:8222/prodction/1-->
+                            <h3><a th:href="@{'/production/'+${production.id}}" th:text="${production.title}">同济七版上下册</a></h3>
+                            &nbsp;&nbsp;  ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp; 发布者：<span th:text="${production.user.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span th:text="${#dates.format(production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--最新回复-->
+            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'replies'}">
+                <div class="list-group">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">分类·全部</h3>
+                    </div>
+                    <div class="prods" th:each="production:${paginationdto.productionDTOS}">
+                        <img th:src="${'/'+production.picUrl}" alt="">
+                        <div class="caption">
+                            <!--http://localhost:8222/prodction/1-->
+                            <h3><a th:href="@{'/production/'+${production.id}}" th:text="${production.title}">同济七版上下册</a></h3>
+                            &nbsp;&nbsp;  ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp; 发布者：<span th:text="${production.user.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span th:text="${#dates.format(production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--分页-->
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li>
+                            <a th:if="${paginationdto.showFirstPage}" th:href="@{'/profile/'+${section}(page = 1)}"  aria-label="Previous">
+                                <span aria-hidden="true">&lt;&lt;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:if="${paginationdto.showPrevious}" th:href="@{'/profile/'+${section}(page = ${paginationdto.page}-1)}"  aria-label="Previous">
+                                <span aria-hidden="true">&lt;</span>
+                            </a>
+                        </li>
+                        <li th:each="page:${paginationdto.pages}" th:class="${paginationdto.page == page}? 'active' : ''">
+                            <a th:href="@{'/profile/'+${section}(page = ${page})}" th:text="${page}"></a></li>
+
+                        <li>
+                            <a th:if="${paginationdto.showNext}" th:href="@{'/profile/'+${section}(page = ${paginationdto.page}+1)}" aria-label="Next">
+                                <span aria-hidden="true">&gt;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:if="${paginationdto.showEndPage}" th:href="@{'/profile/'+${section}(page = ${paginationdto.totalPage})}" aria-label="Next">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+        <!--右边：列表操作-->
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="list-group">
+                <a href="/profile/productions" class="list-group-item" th:classappend="${section=='productions'}?'active':''">
+                    我的宝贝
+                </a>
+                <a href="#" class="list-group-item">我的收藏</a>
+                <a href="#" class="list-group-item">最新回复</a>
+                <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+                <a href="#" class="list-group-item">Vestibulum at eros</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

@@ -12,6 +12,7 @@ import com.cassiezys.transaction.model.Production;
 import com.cassiezys.transaction.model.ProductionExample;
 import com.cassiezys.transaction.model.User;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,7 +119,13 @@ public class ProductionService {
         }
     }
 
-    /*所有商品*/
+
+    /**
+     * 所有商品的page页
+     * @param page
+     * @param size
+     * @return
+     */
     public PaginationDTO addPagination(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
         ProductQueryDTO productQueryDTO = new ProductQueryDTO();
@@ -173,6 +180,54 @@ public class ProductionService {
         return productionDTO;
     }
 
+    /**
+     * 当前用户的所有商品的page页
+     * @param id 用户id
+     * @param page
+     * @param size
+     * @return 该页面显示的内容
+     */
+    public PaginationDTO addPaginationByUid(Long id, Integer page, Integer size) {
+        PaginationDTO paginationDTO = new PaginationDTO();
+        ProductQueryDTO productQueryDTO = new ProductQueryDTO();
+
+        ProductionExample productionExample1 = new ProductionExample();
+        productionExample1.createCriteria()
+                .andCreatorEqualTo(id);
+        int totalPro = (int) productionMapper.countByExample(productionExample1);
+        List<ProductionDTO> productionDTOS = new ArrayList<>();
+        if (totalPro % size ==0){
+            paginationDTO.setTotalPage(totalPro / size);
+        }else{
+            paginationDTO.setTotalPage(totalPro /size +1);
+        }
+        if (page <1){
+            page =1;
+        }else if(page>paginationDTO.getTotalPage()){
+            page = paginationDTO.getTotalPage();
+        }
+        paginationDTO.setPage(page);
+        paginationDTO.setPagination(totalPro,page,size);
+        /*当前页面显示的商品*/
+        Integer offset = size *(page -1);
+        productQueryDTO.setPage(offset);
+        productQueryDTO.setSize(size);
+
+        ProductionExample productionExample2 = new ProductionExample();
+        productionExample2.createCriteria()
+                .andCreatorEqualTo(id);
+        List<Production> productions = productionMapper.selectByExampleWithBLOBsWithRowbounds(productionExample2, new RowBounds(offset, size));
+        for (Production production : productions) {
+            User proUser = userMapper.selectByPrimaryKey(production.getCreator());
+            ProductionDTO productionDTO = new ProductionDTO();
+            BeanUtils.copyProperties(production, productionDTO);
+            productionDTO.setUser(proUser);
+            productionDTOS.add(productionDTO);
+        }
+        paginationDTO.setProductionDTOS(productionDTOS);
+
+        return paginationDTO;
+    }
 }
 
 

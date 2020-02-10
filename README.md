@@ -4,8 +4,8 @@
 [Serving Web Content](https://spring.io/guides/gs/serving-web-content/)  
 [Mybatis](https://mybatis.org/mybatis-3/zh/getting-started.html)  
 [spring boot mybatis](https://mybatis.org/spring-boot-starter/)
-[spring web mvc](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#spring-web)
-
+[spring web mvc](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#spring-web)  
+[Mybatis generator plugins](http://mybatis.org/generator/reference/plugins.html)
 ##工具
 [bootstrap](https://v3.bootcss.com/):前端页面  
 [developer tools 热部署](https://docs.spring.io/spring-boot/docs/2.2.3.RELEASE/reference/html/using-spring-boot.html#using-boot-devtools-restart):每次自动启动  
@@ -16,8 +16,8 @@
 ## Execution
 ```bash
 - mybatis
-    mybatis-generator:generate
-    mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+mvn mybatis-generator:generate
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
 - 提示源码无法下载
-    mvn dependency:resolve -Dclassifier=sources
+mvn dependency:resolve -Dclassifier=sources
 ```  
