@@ -279,6 +279,74 @@
     color: #999;
     font-size: 13px;
 }
+.media-object
+{
+    width:50px;
+    height:50px;
+}
+.recommend
+{
+    line-height: 28px;
+}
+.recommend h4{
+    margin: 10px auto;
+}
+.recommend hr{
+    margin-top: 13px;
+}
+.prods-rela
+{
+    padding-left: 0;
+}
+.prods-rela .action{
+    background: #ffe0df;
+}
+.prods-rela a
+{
+    display: block;
+}
+.prods-description
+{
+    max-height: 180px;
+    min-height: 50px;
+    overflow-y: auto;
+}
+.deco-title{
+    margin: 10px 0;
+    padding: 10px;
+    background: #eaeaf0;
+}
+.comment-func{
+    color: #999;
+    margin-top: 5px;
+}
+.comment-func-second{
+    position:relative;
+    margin-left: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+.comment-func .active{
+    color: #499ef3;
+}
+.comment-func-second:hover{
+    color: #499ef3;
+}
+.comment-second{
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    padding-top: 15px;
+}
+.btn-seccond{
+    margin: 10px 0;
+}
+.comment-number{
+    position: absolute;
+    bottom: 0px;
+    left: 18px;
+}
 /*商品详情页面*/
 /*异常页面*/
 .jumbotron

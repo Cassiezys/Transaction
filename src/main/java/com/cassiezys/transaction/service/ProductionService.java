@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Copyright，2020
@@ -227,6 +228,39 @@ public class ProductionService {
         paginationDTO.setProductionDTOS(productionDTOS);
 
         return paginationDTO;
+    }
+
+    /**
+     * 返回与该商品相关的商品集合
+     * @param productionDTO （同Category）
+     * @return List<ProductionDTO></ProductionDTO>
+     */
+    public List<ProductionDTO> findRelated(ProductionDTO productionDTO) {
+
+        ProductionExample productionExample = new ProductionExample();
+        productionExample.or().andCategoryEqualTo(productionDTO.getCategory());
+        productionExample.or().andCityEqualTo(productionDTO.getCity());
+        productionExample.or().andTitleLike("%"+productionDTO.getTitle()+"%");
+        List<Production> productions = productionMapper.selectByExample(productionExample);
+
+        List<ProductionDTO> productionDTOS = productions.stream().map(pros -> {
+            ProductionDTO thisProDto = new ProductionDTO();
+            BeanUtils.copyProperties(pros, thisProDto);
+            return thisProDto;
+        }).collect(Collectors.toList());
+
+        return  productionDTOS;
+    }
+
+    /**
+     * 自增商品阅读量
+     * @param proid
+     */
+    public void incView(Long proid) {
+        Production production = new Production();
+        production.setId(proid);
+        production.setViewCount(1);
+        productionExtMapper.incViewCount(production);
     }
 }
 

@@ -5,6 +5,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <head th:insert="~{import::importhead}"></head>
 </head>
+<script>
+    window.onload = function(){
+        window.localStorage.getItem("toclose");
+        if(toclose == "true"){
+            window.close();
+            window.localStorage.removeItem("toclose");
+        }
+    }
+</script>
 <body>
 <!--head 头部分-->
 <div th:insert="~{head::head}"></div>

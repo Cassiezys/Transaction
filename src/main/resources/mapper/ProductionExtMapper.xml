@@ -22,6 +22,18 @@
         <result column="category" jdbcType="VARCHAR" property="category" />
     </resultMap>
 
+    <update id="incViewCount" parameterType="com.cassiezys.transaction.model.Production" >
+        update production
+        set view_count = view_count + #{viewCount,jdbcType=INTEGER}
+        where id = #{id}
+    </update>
+
+    <update id="incCommentCount" parameterType="com.cassiezys.transaction.model.Production" >
+        update production
+        set comment_count = comment_count + #{commentCount,jdbcType=INTEGER}
+        where id = #{id}
+    </update>
+
     <select id="countByQuery" parameterType="com.cassiezys.transaction.dto.ProductQueryDTO" resultType="java.lang.Integer">
         select count(*) from production
     </select>
