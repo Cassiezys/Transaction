@@ -134,3 +134,46 @@ function secondComment(e) {
     }
 
 }
+/*production.html*/
+
+/*publish.html*/
+var errorhtml=" <div  class='cover'>" +
+    " <img  class='upload-img-cover upload-img' src='/images/download.png'/><div  class='cover-text'>最多三张图片</div></div>"
+$(function () {
+
+
+$("#upload").change(function () {
+    var filePath = $(this)[0].files;// 获取input上传的文件
+    var filesLength = $(this)[0].files.length;
+    filesLength=filesLength>3?3:filesLength;
+    var MaxSize = 2000;   /*最多一次上传2M （2*1024）*/
+    if (filesLength == 0) {
+        alert("未选择封面");
+    } else {
+        $("#container div").remove();
+        var totalSize=0;
+        for(var i=0;i<filesLength;i++){
+            var thisSize = filePath[i].size; /*得到_B*/
+            if(thisSize/1024>MaxSize){
+                alert("超过单次最大传输2M");
+                $("#container").append(errorhtml);
+                return;
+            }else{
+                totalSize+=thisSize;
+                if(totalSize/1024>MaxSize){
+                    alert("总传输超过单次最大传输2M");
+                    $("#container").append(errorhtml);
+                    return;
+                }
+            }
+            var url = window.URL.createObjectURL(filePath[i]); //将上传的文件转化为url
+            var htmlStr="<div class='cover'>";
+            htmlStr+= "<div class='img-trash' style='overflow: hidden; height: 0px;'><span class='icon-trash-o'></span></div>"
+            htmlStr+="<img class='upload-img-cover upload-img' src=" +url+ "></div>";
+            $("#container").append(htmlStr);
+        }
+        console.log(url);
+    }
+});
+
+})

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,9 +36,11 @@ public class ProductionController {
     public String product(@PathVariable(name = "proid")Long proid,
                           Model model){
         ProductionDTO productionDTO = productionService.findByPid(proid);
+        List<String> pics = Arrays.asList(productionDTO.getPicUrl().split(";"));
         List<ProductionDTO> relatedProdtos = productionService.findRelated(productionDTO);
         List<CommentDTO> commentdtos = commentService.findByTargetId(proid, CommentTypeEnum.QUESTION);
         productionService.incView(proid);
+        model.addAttribute("pics",pics);
         model.addAttribute("commentdtos",commentdtos);
         model.addAttribute("productiondto",productionDTO);
         model.addAttribute("relatedProdtos",relatedProdtos);

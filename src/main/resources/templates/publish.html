@@ -23,44 +23,20 @@
             <div class="block">
                 <div class="main">
                     <div id="container" class="file-container">
-                        <div class="cover">
-                            <!--如果不需要回显图片，src留空即可-->
-                            <img class="upload-img" th:src="@{${pic}}" th:if="${pic} != null" /><div class="cover-text">上传封面</div>
-                            <img th:if="${pic} == null"  class="upload-img-cover" th:src="@{/images/download.png}"/><div class="cover-text">上传封面</div>
-
-                            <input type="file" class="file" name="pic" id="upload" accept="image/gif, image/jpeg, image/jpg, image/png">
+                        <a href="javascript:;" class="file-container button indigo">
+                            选择图片
+                            <input type="file" name="pics" class="file" id="upload" multiple accept="image/gif, image/jpeg, image/jpg, image/png" />
                             <input type="hidden" name="pictext" th:value="${pictext}" />
-                            <span th:text="${pic}"></span>
+                        </a>
+                        <div class="cover" th:each="pic:${pics}">
+                            <!--如果不需要回显图片，src留空即可-->
+                            <img th:src="@{${pic}}" class="upload-img upload-img-cover" />
+                        </div>
+                        <div  class="cover" th:if="${#lists.isEmpty(pics)}" >
+                            <img   class="upload-img-cover upload-img " th:src="@{/images/download.png}"/><div  class="cover-text">最多三张图片</div>
                         </div>
                     </div>
                 </div>
-                <script>
-                    $("#upload").change(function () {
-                        var filePath = $(this)[0].files[0];// 获取input上传的文件
-                        if (!filePath.name) {
-                            alter("未选择封面");
-                        } else {
-                            var url = window.URL.createObjectURL(filePath); //将上传的文件转化为url
-                            $('#container img').attr('src', url);
-                            $('#container img').attr('class',"upload-img");
-                            console.log(url);
-                        }
-                    });
-                    javaex.upload({
-                        type : "image",
-                        id : "upload",	// <input type="file" />的id
-                        dataType : "url",	// 返回的数据类型：base64 或 url
-                        url : "upload", // 请求路径
-                        param : "file", // 参数名称，SSM中与MultipartFile的参数名保持一致
-                        callback : function(rtn) {
-                            // 后台返回的数据
-                            console.log(rtn);
-                            /*    var imgUrl = rtn.data.imgUrl;
-                                $("#container img").attr("src", imgUrl);
-                                $("#cover").val(imgUrl);*/
-                            }
-                    });
-                </script>
             </div>
         </div>
 

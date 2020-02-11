@@ -18,6 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,13 +45,14 @@ public class PublishController {
 
     /**
      * 打开修改页面
+     *
      * @param proId 商品pid
      * @param model 返回productdto
      * @return publish.html
      */
     @GetMapping("/publish/{proId}")
-    public String doModify(@PathVariable(name = "proId")Long proId,
-                           Model model){
+    public String doModify(@PathVariable(name = "proId") Long proId,
+                           Model model) {
         ProductionDTO productionDTO = productionService.findByPid(proId);
         model.addAttribute("cities", CityCache.get());
         model.addAttribute("categories", CategoryCache.get());
@@ -62,10 +67,16 @@ public class PublishController {
         model.addAttribute("wechat", productionDTO.getWechat());
         model.addAttribute("address", productionDTO.getAddress());
         model.addAttribute("payway", productionDTO.getPayway());
-        model.addAttribute("pictext",productionDTO.getPicUrl());
-        String imgUrl = "/" + productionDTO.getPicUrl();
-        model.addAttribute("pic", imgUrl);
-        model.addAttribute("pid",productionDTO.getId());
+        model.addAttribute("pictext", productionDTO.getPicUrl());
+        String imgUrl = productionDTO.getPicUrl();
+        List<String> pics = Arrays.asList(imgUrl.split(";"));
+        for (String pic : pics) {
+            pic = "/" + pic;
+            System.out.println(pic);
+        }
+
+        model.addAttribute("pics", pics);
+        model.addAttribute("pid", productionDTO.getId());
         return "publish";
     }
 
@@ -74,7 +85,7 @@ public class PublishController {
     public String doPublish(@RequestParam(value = "city", required = false) String city,
                             @RequestParam(value = "title", required = false) String title,
                             @RequestParam(value = "description", required = false) String description,
-                            @RequestParam(value = "pic", required = false) MultipartFile pic,
+                            @RequestParam(value = "pics", required = false) MultipartFile[] pics,
                             @RequestParam(value = "price", required = false) Float price,
                             @RequestParam(value = "origprice", required = false) Float origprice,
                             @RequestParam(value = "tele", required = false) Long tele,
@@ -84,7 +95,7 @@ public class PublishController {
                             @RequestParam(value = "address", required = false) String address,
                             @RequestParam(value = "payway", required = false) String payway,
                             @RequestParam(value = "pid", required = false) Long pid,
-                            @RequestParam(value = "pictext" , required =  false)String pictext,
+                            @RequestParam(value = "pictext", required = false) String pictext,
                             @RequestParam Map param,
                             HttpServletRequest request,
                             Model model
@@ -102,8 +113,8 @@ public class PublishController {
         model.addAttribute("wechat", wechat);
         model.addAttribute("address", address);
         model.addAttribute("payway", payway);
-        model.addAttribute("pid",pid);
-        if (pic.isEmpty()&&StringUtils.isBlank(pictext)) {
+        model.addAttribute("pid", pid);
+        if (pics.length == 0 && StringUtils.isBlank(pictext)) {
             model.addAttribute("error", "图片不能为空");
             return "publish";
         }
@@ -136,13 +147,13 @@ public class PublishController {
             return "publish";
         }
         if (payway.equals("online")) {
-            if(StringUtils.isBlank(wechat)&&tele==null&&tencent==null){
+            if (StringUtils.isBlank(wechat) && tele == null && tencent == null) {
                 model.addAttribute("error", "线上交易：QQ,微信，电话至少留下一个联系方式不能为空");
                 return "publish";
             }
         }
         if (payway.equals("offline")) {
-            if(StringUtils.isBlank(address)){
+            if (StringUtils.isBlank(address)) {
                 model.addAttribute("error", "线下交易，留下期望交易的地址");
                 return "publish";
             }
@@ -153,17 +164,22 @@ public class PublishController {
             model.addAttribute("error", "请先登录");
             return "publish";
         }
-        String imgUrl =pictext;
-        if(!pic.isEmpty()){
-            String fileName = pic.getOriginalFilename();
-            String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            //fileName= "zhenbao-"+UUID.randomUUID()+suffixName;
-            fileName = user.getAccountId()+"/zhenbao-" + fileName;
-            productionService.ProductionService(user.getAccountId());
-            imgUrl = "upload-dir/" + fileName;//重命名的名字
-            model.addAttribute("pic", imgUrl);
+        String imgUrl = pictext;
+        List<String> oldPics = Arrays.asList(pictext.split(";"));
+        if (!pics[0].isEmpty()) {
+            imgUrl = "";
+            oldPics = new ArrayList<>();
+            for (MultipartFile pic : pics) {
+                String thisPic = pic.getOriginalFilename();
+                thisPic = user.getAccountId() + "/zhenbao-" + thisPic;
+                productionService.ProductionService(user.getAccountId());
+                thisPic = "upload-dir/" + thisPic;//重命名的名字
+                imgUrl += thisPic + ";";
+                oldPics.add(thisPic);
+            }
+            model.addAttribute("pics", oldPics);
         }
-
+        model.addAttribute("pictext", imgUrl);
         Production production = new Production();
         production.setCity(city);
         production.setPicUrl(imgUrl);
@@ -179,10 +195,14 @@ public class PublishController {
         production.setAddress(address);
         production.setPayway(payway);
         production.setId(pid);
-        if(!pic.isEmpty()){
-            //pic不是空才重新上传图片
+        if (!pics[0].isEmpty()) {
+            //pics不是空才重新上传图片
             try {
-                productionService.uploadPic(pic.getInputStream(),production);
+                int i = 0;
+                for (MultipartFile pic : pics) {
+                    productionService.uploadPic(pic.getInputStream(), oldPics.get(i));
+                    ++i;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

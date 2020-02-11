@@ -25,18 +25,9 @@
                     <div id="slide" class="ex-slide">
                         <!--背景大图-->
                         <ul class="focus-bg">
-                            <li>
+                            <li th:each="pic:${pics}">
                                 <a href="javascript:;" target="_blank"
-                                   style="background-image: url(/upload-dir/zhenbao-Wechat.jpg)">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" target="_blank"
-                                   style="background-image: url(/upload-dir/zhenbao-timgPP5FPAIY.jpg)">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" target="_blank" style="background-image: url(/images/math.jpg)">
+                                   th:attr="style='background-image:url(/'+${pic}+')'">
                                 </a>
                             </li>
                         </ul>
@@ -45,14 +36,8 @@
                             <!--焦点，如果不需要焦点的话，直接去掉这个div即可-->
                             <div class="focus-box">
                                 <ul>
-                                    <li>
-                                        <a href="javascript:;"><img src="/images/math.jpg"/></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;"><img src="/upload-dir/zhenbao-timgPP5FPAIY.jpg"/></a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;"><img src="/images/math.jpg"/></a>
+                                    <li th:each="pic:${pics}">
+                                        <a href="javascript:;"><img th:src="${'/'+pic}"/></a>
                                     </li>
                                 </ul>
                             </div>

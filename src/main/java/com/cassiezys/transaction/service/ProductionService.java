@@ -46,6 +46,10 @@ public class ProductionService {
 
     private Path rootLocation;
 
+    /**
+     * 创建上传图片的文件夹
+     * @param account_Id 用户Id 每个用户拥有单独的文件夹
+     */
     public void ProductionService(String account_Id) {
         if(StringUtils.isBlank(account_Id)){
             throw new CustomizeCodeException(ErrorCodeEnumImp.NO_LOGIN);
@@ -109,10 +113,10 @@ public class ProductionService {
     /**
      * 单独图片上传
      * @param inputStream
-     * @param production
+     * @param picUrl 圖片路徑
      */
-    public void uploadPic(InputStream inputStream, Production production) {
-        String fileName = production.getPicUrl().substring(production.getPicUrl().lastIndexOf("/") + 1);
+    public void uploadPic(InputStream inputStream, String picUrl) {
+        String fileName = picUrl.substring(picUrl.lastIndexOf("/") + 1);
         try {
             Files.copy(inputStream, this.rootLocation.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -132,7 +136,6 @@ public class ProductionService {
         ProductQueryDTO productQueryDTO = new ProductQueryDTO();
 
         int totalPro = productionExtMapper.countByQuery(productQueryDTO);
-        List<ProductionDTO> productionDTOS = new ArrayList<>();
         if (totalPro % size ==0){
             paginationDTO.setTotalPage(totalPro / size);
         }else{
@@ -150,11 +153,15 @@ public class ProductionService {
         productQueryDTO.setPage(offset);
         productQueryDTO.setSize(size);
 
+        List<ProductionDTO> productionDTOS = new ArrayList<>();
         List<Production> productions = productionExtMapper.selectByQuery(productQueryDTO);
         for (Production production : productions) {
             User proUser = userMapper.selectByPrimaryKey(production.getCreator());
             ProductionDTO productionDTO = new ProductionDTO();
             BeanUtils.copyProperties(production, productionDTO);
+            if(productionDTO.getPicUrl().contains(";")){
+                productionDTO.setPicUrl(productionDTO.getPicUrl().substring(0,productionDTO.getPicUrl().indexOf(";")));
+            }
             productionDTO.setUser(proUser);
             productionDTOS.add(productionDTO);
         }
@@ -222,6 +229,9 @@ public class ProductionService {
             User proUser = userMapper.selectByPrimaryKey(production.getCreator());
             ProductionDTO productionDTO = new ProductionDTO();
             BeanUtils.copyProperties(production, productionDTO);
+            if(productionDTO.getPicUrl().contains(";")){
+                productionDTO.setPicUrl(productionDTO.getPicUrl().substring(0,productionDTO.getPicUrl().indexOf(";")));
+            }
             productionDTO.setUser(proUser);
             productionDTOS.add(productionDTO);
         }
