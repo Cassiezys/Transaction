@@ -298,8 +298,11 @@
 {
     padding-left: 0;
 }
-.prods-rela .action{
-    background: #ffe0df;
+.prods-rela li a{
+    color: #337ab7;
+}
+.prods-rela li :hover{
+    color: #499ef3;
 }
 .prods-rela a
 {
@@ -315,6 +318,19 @@
     margin: 10px 0;
     padding: 10px;
     background: #eaeaf0;
+}
+.comment-area{
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+.comment-area .comment-body
+{
+    padding: 0px 4px 4px 4px;
+}
+.comment-body .comment-head{
+    font-size: 14px;
+    margin-bottom: 8px;
 }
 .comment-func{
     color: #999;

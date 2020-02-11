@@ -7,7 +7,7 @@
 </head>
 <script>
     window.onload = function(){
-        window.localStorage.getItem("toclose");
+        var toclose = window.localStorage.getItem("toclose");
         if(toclose == "true"){
             window.close();
             window.localStorage.removeItem("toclose");

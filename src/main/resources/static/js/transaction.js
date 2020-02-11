@@ -32,11 +32,14 @@ $(function () {
     });
 });
 
-$("#prods-rela li").hover(function () {
-    $(this).addClass("action");
-}, function () {
-    $(this).removeClass("action");
+$(function () {
+    $("#prods-rela li").hover(function () {
+        $(this).addClass("action");
+    }, function () {
+        $(this).removeClass("action");
+    });
 });
+
 
 function commitComment(targetId, content, type) {
     $.ajax({
@@ -53,6 +56,7 @@ function commitComment(targetId, content, type) {
 
             if(ret.code == 2120){
                 //刷新页面
+                window.location.reload();
             }else{
                 if(ret.code == 5000){
                     var login = confirm(ret.message);
@@ -99,14 +103,13 @@ function secondComment(e) {
            contentType: 'application/json',
            success:function (ret) {
                console.log(ret);
-               var htmlstr="";
                 $.each(ret.data,function (index,element) {
                     /*<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-area'
                     th:each='comment:${commentdtos}'>
                         <div class='media'><div class='media-left'><img class='media-object img-rounded'th:src='[(${element.user.avatarUrl == null})]?'/images/default-user.jpg':[(${element.user.avatarUrl})]'></div>
                         <div class='media-body comment-body'><h4 class='media-heading comment-head'><span th:text='[(${element.user.name})]'></span> <span th:text='[(${#dates.format(element.gmtCreate,'yyyy-MM-dd')})]'></span></h4>
                         <div th:if='[(${element.content})] == null'><br></div><div th:text='[(${element.content})]'></div></div></div></div>*/
-                    htmlstr+="<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-area"+
+                    var htmlstr="<div class='col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-area'>"+
                         "<div class='media'><div class='media-left'>";
                     if(element.user.avatarUrl==null){
                         htmlstr+="<img class='media-object img-rounded' src='/images/default-user.jpg'></div>"
@@ -114,15 +117,16 @@ function secondComment(e) {
                         htmlstr+="<img class='media-object img-rounded' src="+element.user.avatarUrl+"></div>";
                     }
                     htmlstr+="<div class='media-body comment-body'><h4 class='media-heading comment-head'><span>"+element.user.name+"</span>"
-                        +"<span>"+ moment(result.gmtCreate).format('YYYY-MM-DD')+"</span></h4>";
+                        +"<span>"+ moment(element.gmtCreate).format('YYYY-MM-DD') +"</span></h4>";
                     if(element.content==null){
                         htmlstr+="<div><br></div>"
                     }else{
                         htmlstr+="<div>"+element.content+"</div>";
                     }
+                    htmlstr+="</div></div></div>";
                     console.log(htmlstr);
+                    commentfuc.prepend(htmlstr);
                 });
-               commentfuc.html("二级评论"+htmlstr);
            },
            dataType: "json"
         });

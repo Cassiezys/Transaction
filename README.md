@@ -7,6 +7,7 @@
 [spring web mvc](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#spring-web)  
 [Mybatis generator plugins](http://mybatis.org/generator/reference/plugins.html)  
 [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)
+
 ##工具
 [bootstrap](https://v3.bootcss.com/):前端页面  
 [developer tools 热部署](https://docs.spring.io/spring-boot/docs/2.2.3.RELEASE/reference/html/using-spring-boot.html#using-boot-devtools-restart):每次自动启动  
