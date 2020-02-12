@@ -1,6 +1,7 @@
 package com.cassiezys.transaction.controller;
 
 import com.cassiezys.transaction.dto.PaginationDTO;
+import com.cassiezys.transaction.dto.ProductionDTO;
 import com.cassiezys.transaction.model.User;
 import com.cassiezys.transaction.service.ProductionService;
 import com.cassiezys.transaction.service.UserService;
@@ -39,7 +40,7 @@ public class IndexController {
     public String index(@RequestParam(name = "page",defaultValue = "1")Integer page,
                         @RequestParam(name = "size",defaultValue = "5")Integer size,
                         Model model){
-        PaginationDTO paginationDTO = productionService.addPagination(page,size );
+        PaginationDTO<ProductionDTO> paginationDTO = productionService.addPagination(page,size );
 
         model.addAttribute("paginationdto",paginationDTO);
         return "index";

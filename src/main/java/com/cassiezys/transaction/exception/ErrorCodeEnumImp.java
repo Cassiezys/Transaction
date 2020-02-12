@@ -8,7 +8,9 @@ public enum ErrorCodeEnumImp implements ErrorCode {
     COTENT_IS_EMPTY(5004,"评论一点点也是一点点心意嘛~"),
     TARGET_PARAM_NOT_FOUND(5005,"没有选中问题或回复"),
     TYPE_NOT_FOUND(5006,"欸嘿?评论目的不明确噢~"),
-    COMMENT_NOT_FOUND(5007,"该评论已经被删啦~")
+    COMMENT_NOT_FOUND(5007,"该评论已经被删啦~"),
+    NOTIFICATION_NOT_FOUND(5008,"该通知已经被删除啦"),
+    NOTIFICATION_INFOR_ERROR(5009,"通知信息有误,账号错误")
     ;
 
     private Integer code;
@@ -28,4 +30,5 @@ public enum ErrorCodeEnumImp implements ErrorCode {
     public String getMessage() {
         return message;
     }
+
 }

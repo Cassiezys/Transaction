@@ -165,12 +165,12 @@
                         <div class="media-left">
                             <a href="#">
                                 <img class="media-object img-rounded"
-                                     th:src="${productiondto.user.avatarUrl}==null?'/images/default-user.jpg':${productiondto.user.avatarUrl}">
+                                     th:src="${session.user.avatarUrl}==null?'/images/default-user.jpg':${productiondto.user.avatarUrl}">
                             </a>
                         </div>
                         <div class="media-body">
                             <h4 class="media-heading">
-                                <span th:text="${productiondto.user.name}"></span>
+                                <span th:text="${session.user.name}==null?'登录才有姓名噢~':${session.user.name}"></span>
                             </h4>
                         </div>
                     </div>

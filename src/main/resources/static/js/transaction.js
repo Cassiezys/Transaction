@@ -155,6 +155,8 @@ $("#upload").change(function () {
         for(var i=0;i<filesLength;i++){
             var thisSize = filePath[i].size; /*得到_B*/
             if(thisSize/1024>MaxSize){
+                MsgBox('提示','最多选择2M');
+                setTimeout(fadeOut,500);
                 alert("超过单次最大传输2M");
                 $("#container").append(errorhtml);
                 return;

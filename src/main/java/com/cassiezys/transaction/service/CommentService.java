@@ -2,6 +2,7 @@ package com.cassiezys.transaction.service;
 
 import com.cassiezys.transaction.dto.CommentDTO;
 import com.cassiezys.transaction.enums.CommentTypeEnum;
+import com.cassiezys.transaction.enums.NotificationTypeEnum;
 import com.cassiezys.transaction.exception.CustomizeCodeException;
 import com.cassiezys.transaction.exception.ErrorCodeEnumImp;
 import com.cassiezys.transaction.mapper.*;
@@ -34,6 +35,8 @@ public class CommentService {
     private ProductionMapper productionMapper;
     @Autowired
     private ProductionExtMapper productionExtMapper;
+    @Autowired
+    private NotificationMapper notificationMapper;
 
     /**
      * 返回该商品的评论 或者 是评论的回复
@@ -74,11 +77,12 @@ public class CommentService {
 
     /**
      * 添加评论，自增评论数++-》事务
+     * 添加 通知
      * @param comment 新评论
-     * @param user 评论人
+     * @param commentator 评论创建者
      */
     @Transactional
-    public void addComment(Comment comment, User user) {
+    public void addComment(Comment comment, User commentator) {
         if (comment.getParentId()==null||comment.getParentId()==0){
             throw new CustomizeCodeException(ErrorCodeEnumImp.TARGET_PARAM_NOT_FOUND);
         }
@@ -94,6 +98,9 @@ public class CommentService {
             commentMapper.insert(comment);
             thisProdt.setCommentCount(1);
             productionExtMapper.incCommentCount(thisProdt);
+            //添加 有人评论商品的 通知
+            Notification notification = createNotification(comment, commentator, thisProdt.getId(), thisProdt.getCreator(), thisProdt.getTitle(), NotificationTypeEnum.REPLY_PRODUCTION.getType());
+            notificationMapper.insert(notification);
         }else if(comment.getType() == CommentTypeEnum.COMMENT.getType()){
             //回复评论
             Comment thisComment = commentMapper.selectByPrimaryKey(comment.getParentId());
@@ -105,11 +112,38 @@ public class CommentService {
             if(thisProdt == null){
                 throw new CustomizeCodeException(ErrorCodeEnumImp.PRODUCTION_NOT_FOUND);
             }
-            /*只能增加评论数：所以新建一个评论*/
             Comment tempComment = new Comment();
             tempComment.setId(thisComment.getId());
             tempComment.setCommentCount(1);
             commentExtMapper.incCommentCount(tempComment);
+            //添加有人评论 你的回复的通知
+            Notification notification = createNotification(comment, commentator, thisProdt.getId(), comment.getCommentator(),comment.getContent() , NotificationTypeEnum.REPLY_COMMENT.getType() );
+            notificationMapper.insert(notification);
         }
+    }
+
+    /**
+     * 创建通知
+     * @param comment 新创的评论
+     * @param commentator 新评论的创建者User
+     * @param outerId 商品的id
+     * @param receiver  接收者id  商品的创建者/某评论的建立者
+     * @param outerTitle 商品名/某评论
+     * @param type 回复商品/回复评论
+     * @return
+     */
+    private Notification createNotification(Comment comment, User commentator, Long outerId, Long receiver, String outerTitle, int type) {
+        Notification notification = new Notification();
+        notification.setNotifier(comment.getCommentator());
+        notification.setNotifierName(commentator.getName());
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setOuterid(outerId);
+       /* 商品名   评论 */
+        notification.setOuterTitle(outerTitle);
+        /* 商品的创建者；  评论的发出者 */
+        notification.setReceiver(receiver);
+        notification.setStatus(0);
+        notification.setType(type);
+        return notification;
     }
 }

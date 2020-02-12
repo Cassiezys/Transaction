@@ -131,8 +131,8 @@ public class ProductionService {
      * @param size
      * @return
      */
-    public PaginationDTO addPagination(Integer page, Integer size) {
-        PaginationDTO paginationDTO = new PaginationDTO();
+    public PaginationDTO<ProductionDTO> addPagination(Integer page, Integer size) {
+        PaginationDTO<ProductionDTO> paginationDTO = new PaginationDTO<>();
         ProductQueryDTO productQueryDTO = new ProductQueryDTO();
 
         int totalPro = productionExtMapper.countByQuery(productQueryDTO);
@@ -165,7 +165,7 @@ public class ProductionService {
             productionDTO.setUser(proUser);
             productionDTOS.add(productionDTO);
         }
-        paginationDTO.setProductionDTOS(productionDTOS);
+        paginationDTO.setDataDtos(productionDTOS);
 
         return paginationDTO;
     }
@@ -195,9 +195,8 @@ public class ProductionService {
      * @param size
      * @return 该页面显示的内容
      */
-    public PaginationDTO addPaginationByUid(Long id, Integer page, Integer size) {
-        PaginationDTO paginationDTO = new PaginationDTO();
-        ProductQueryDTO productQueryDTO = new ProductQueryDTO();
+    public PaginationDTO<ProductionDTO> addPaginationByUid(Long id, Integer page, Integer size) {
+        PaginationDTO<ProductionDTO> paginationDTO = new PaginationDTO<>();
 
         ProductionExample productionExample1 = new ProductionExample();
         productionExample1.createCriteria()
@@ -218,8 +217,6 @@ public class ProductionService {
         paginationDTO.setPagination(totalPro,page,size);
         /*当前页面显示的商品*/
         Integer offset = size *(page -1);
-        productQueryDTO.setPage(offset);
-        productQueryDTO.setSize(size);
 
         ProductionExample productionExample2 = new ProductionExample();
         productionExample2.createCriteria()
@@ -235,7 +232,7 @@ public class ProductionService {
             productionDTO.setUser(proUser);
             productionDTOS.add(productionDTO);
         }
-        paginationDTO.setProductionDTOS(productionDTOS);
+        paginationDTO.setDataDtos(productionDTOS);
 
         return paginationDTO;
     }

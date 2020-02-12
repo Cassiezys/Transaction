@@ -11,8 +11,8 @@ import java.util.List;
  * Description:页面上所有的信息：包含商品，页面等信息
  */
 @Data
-public class PaginationDTO {
-    private List<ProductionDTO> productionDTOS;
+public class PaginationDTO<T> {
+    private List<T> dataDtos;
     private boolean showPrevious;
     private boolean showFirstPage;
     private boolean showNext;
@@ -24,11 +24,11 @@ public class PaginationDTO {
 
     /**
      * 分页标签的显示
-     * @param totalPro  总页数
+     * @param totalCount  总数量
      * @param page 当前页面
      * @param size 页内显示的商品数量
      */
-    public void setPagination(int totalPro, Integer page, Integer size) {
+    public void setPagination(int totalCount, Integer page, Integer size) {
         /*先添加当前的这一页*/
         pages.add(page);
         for(int i=1;i<=3; ++i){
@@ -36,7 +36,7 @@ public class PaginationDTO {
                 //向前添加2个数字
                 pages.add(0,page-i);
             }
-            if (page+i<=totalPage){
+            if (page+i<= this.totalPage){
                 //向后添加数字
                 pages.add(page+i);
             }
@@ -48,7 +48,7 @@ public class PaginationDTO {
         }else {
             showPrevious = true;
         }
-        if (page == totalPage) {
+        if (page == this.totalPage) {
             showNext = false;
         } else {
             showNext = true;
@@ -62,7 +62,7 @@ public class PaginationDTO {
         }
 
         //last page
-        if (pages.contains(totalPage)) {
+        if (pages.contains(this.totalPage)) {
             showEndPage = false;
         } else {
             showEndPage = true;

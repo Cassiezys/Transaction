@@ -1,9 +1,13 @@
 package com.cassiezys.transaction.controller;
 
+import com.cassiezys.transaction.dto.NotificationDTO;
 import com.cassiezys.transaction.dto.PaginationDTO;
+import com.cassiezys.transaction.dto.ProductionDTO;
 import com.cassiezys.transaction.exception.CustomizeCodeException;
 import com.cassiezys.transaction.exception.ErrorCodeEnumImp;
+import com.cassiezys.transaction.mapper.NotificationMapper;
 import com.cassiezys.transaction.model.User;
+import com.cassiezys.transaction.service.NotificationService;
 import com.cassiezys.transaction.service.ProductionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ProfileController {
     @Autowired
     ProductionService productionService;
+    @Autowired
+    NotificationService notificationService;
 
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name = "action")String action,
@@ -36,9 +42,16 @@ public class ProfileController {
             throw new CustomizeCodeException(ErrorCodeEnumImp.NO_LOGIN);
         }
         if("productions".equals(action)){
+            //查看我发布的商品
             model.addAttribute("section","productions");
             model.addAttribute("sectionName","我发布的商品");
-            PaginationDTO paginationDTO = productionService.addPaginationByUid(user.getId(), page, size);
+            PaginationDTO<ProductionDTO> paginationDTO = productionService.addPaginationByUid(user.getId(), page, size);
+            model.addAttribute("paginationdto",paginationDTO);
+        }else if("replies".equals(action)){
+            //查找通知
+            PaginationDTO<NotificationDTO> paginationDTO = notificationService.addPaginationByUid(user.getId(), page, size);
+            model.addAttribute("section","replies");
+            model.addAttribute("sectionName","最新回复");
             model.addAttribute("paginationdto",paginationDTO);
         }
 

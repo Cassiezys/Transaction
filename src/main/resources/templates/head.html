@@ -17,13 +17,16 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right" th:if="${session.user!=null}">
                     <li><a href="/publish">发布新商品</a></li>
+                    <li>
+                        <a href="/profile/replies">通知 <span class="badge" th:text="${session.unreadCount}">42</span></a>
+                    </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <span th:text="${session.user.getName()}"></span>
                             <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/profile/productions">我的商品</a></li>
-                            <li><a href="/profile/like">我的收藏</a></li>
+                            <li><a href="/profile/favorites">我的收藏</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#">Separated link</a></li>
                             <li><a href="/logout">退出登录</a></li>
