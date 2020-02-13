@@ -33,21 +33,21 @@
                     </div>
                 </div>
             </div>
-            <!--我的收藏-->
-            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'favorites'}">
+            <!--我的订单-->
+            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'orders'}">
                 <div class="list-group">
                     <div class="panel-heading">
                         <h3 class="panel-title">分类·全部</h3>
                     </div>
-                    <div class="prods" th:each="production:${paginationdto.dataDtos}">
-                        <img th:src="${'/'+production.picUrl}" alt="">
+                    <div class="prods" th:each="order:${paginationdto.dataDtos}">
+                        <img th:src="${'/'+order.production.picUrl}" alt="">
                         <div class="caption">
                             <!--http://localhost:8222/prodction/1-->
-                            <h3><a th:href="@{'/production/'+${production.id}}"
-                                   th:text="${production.title}">同济七版上下册</a></h3>
-                            &nbsp;&nbsp; ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp;
-                            发布者：<span th:text="${production.user.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span
-                                th:text="${#dates.format(production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+                            <h3><a th:href="@{'/production/'+${order.production.id}}"
+                                   th:text="${order.production.title}">同济七版上下册</a></h3>
+                            &nbsp;&nbsp; ￥<span th:text="${order.production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp;
+                            发布者：<span th:text="${order.seller.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span
+                                th:text="${#dates.format(order.production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
                         </div>
                     </div>
                 </div>
@@ -70,8 +70,27 @@
                     </div>
                 </div>
             </div>
+            <!--我的购物车-->
+            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'cart'}">
+                <div class="list-group">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">购物车里宝藏多多，记得清理噢~</h3>
+                    </div>
+                    <div class="prods" th:each="order:${paginationdto.dataDtos}">
+                        <img th:src="${'/'+order.production.picUrl}" alt="">
+                        <div class="caption">
+                            <!--http://localhost:8222/prodction/1-->
+                            <h3><a th:href="@{'/production/'+${production.id}}"
+                                   th:text="${order.production.title}">同济七版上下册</a></h3>
+                            &nbsp;&nbsp; ￥<span th:text="${order.production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp;
+                            发布者：<span th:text="${order.seller.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span
+                                th:text="${#dates.format(order.production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--分页-->
-            <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${paginationdto.page!=0}">
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
                         <li>
@@ -111,13 +130,15 @@
         <!--右边：列表操作-->
         <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="list-group">
-                <a href="/profile/productions" class="list-group-item" th:classappend="${section=='productions'}?'active':''">我的宝贝</a>
-                <a href="profile/favorites" class="list-group-item" th:classappend="${section=='favorites'}?'active':''">我的收藏</a>
+                <a href="/profile/productions" class="list-group-item"
+                   th:classappend="${section=='productions'}?'active':''">我的宝贝</a>
+                <a href="profile/favorites" class="list-group-item"
+                   th:classappend="${section=='favorites'}?'active':''">我的收藏</a>
                 <a href="/profile/replies" class="list-group-item" th:classappend="${section=='replies'}?'active':''">最新回复
                     <span class="badge" th:text="${session.unreadCount}">14</span></a>
                 </a>
-                <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-                <a href="#" class="list-group-item">Vestibulum at eros</a>
+                <a href="profile/orders" class="list-group-item">全部订单</a>
+                <a href="profile/cars" class="list-group-item">我的购物车</a>
             </div>
         </div>
     </div>

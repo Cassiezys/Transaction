@@ -53,6 +53,7 @@ public class CommentController {
         comment.setCommentCount(0);
         commentService.addComment(comment,user);
 
+
         return ResultDTO.successOf();
     }
 

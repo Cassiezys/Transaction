@@ -47,13 +47,13 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">分类·全部</h3>
                 </div>
-                <div class="prods" th:each="production:${paginationdto.DataDtos}">
+                <div class="prods" th:each="production:${paginationdto.dataDtos}">
                     <div class="picCover">
                         <img th:src="${production.picUrl}" alt="">
                     </div>
                     <div class="caption">
                         <!--http://localhost:8222/prodction/1-->
-                        <h3><a th:href="@{'/production/'+${production.id}}" th:text="${production.title}">同济七版上下册</a></h3>
+                        <h3><a th:href="@{'/production/details/'+${production.id}}" th:text="${production.title}">同济七版上下册</a></h3>
                       &nbsp;&nbsp;  ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp; 发布者：<span th:text="${production.user.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span th:text="${#dates.format(production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
                     </div>
                 </div>
