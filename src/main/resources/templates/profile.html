@@ -135,7 +135,7 @@
                             <li class="td td-func">
                                 <div class="td-inner">
                                     <a class="btn btn-success" href="#">购买</a>
-                                    <a class="btn btn-danger" href="#">删除</a>
+                                    <a class="btn btn-danger" href="javascript:;" th:data-id="${order.id}" onclick="deleOrder(this)">删除</a>
                                 </div>
                             </li>
                         </ul>
@@ -143,17 +143,37 @@
                     <script>
                         function addCount(e){
                             var id = e.getAttribute("data-id");
-                            var singlePrice = parseInt($("#single"+id).text());
+                            var singlePrice = parseFloat($("#single"+id).text());
                             var inputNum = (parseInt($("#inputNum"+id).val())+1)>100?1:(parseInt($("#inputNum"+id).val())+1);
                             $("#inputNum"+id).val(inputNum);
                             $("#thisSum"+id).html(singlePrice*inputNum);
                         }
                         function subCount(e){
                             var id = e.getAttribute("data-id");
-                            var singlePrice = parseInt($("#single"+id).text());
-                            var inputNum = (parseInt($("#inputNum"+id).val())-1)<1?1:(parseInt($("#inputNum"+id).val())+1);
+                            var singlePrice = parseFloat($("#single"+id).text());
+                            var inputNum = (parseInt($("#inputNum"+id).val())-1)<1?1:(parseInt($("#inputNum"+id).val())-1);
                             $("#inputNum"+id).val(inputNum);
                             $("#thisSum"+id).html(singlePrice*inputNum);
+                        }
+                        function deleOrder(e) {
+                            var del = confirm("你确定要删除订单吗？");
+                            var oid = e.getAttribute("data-id");
+                            if(del){
+                                $.ajax({
+                                    type: "GET",
+                                    url: "/order/"+oid,
+                                    contentType: 'application/json',
+                                    success:function (ret) {
+                                        if(ret.code === 2120){
+                                            //刷新页面
+                                            window.location.reload();
+                                        }else{
+                                            alert("删除失败");
+                                        }
+                                    },
+                                    dataType: "json"
+                                })
+                            }
                         }
                     </script>
                 </div>

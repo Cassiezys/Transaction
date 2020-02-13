@@ -212,4 +212,12 @@ public class OrderService {
 
         return orderDTO;
     }
+
+    public void delOrder(Long uid, Long oid) {
+        Orders order = ordersMapper.selectByPrimaryKey(oid);
+        if (order == null){
+            throw new CustomizeCodeException(ErrorCodeEnumImp.ORDER_NOT_FOUND);
+        }
+        ordersMapper.deleteByPrimaryKey(oid);
+    }
 }

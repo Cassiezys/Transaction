@@ -11,7 +11,8 @@ public enum ErrorCodeEnumImp implements ErrorCode {
     TYPE_NOT_FOUND(5006,"欸嘿?评论目的不明确噢~"),
     COMMENT_NOT_FOUND(5007,"该评论已经被删啦~"),
     NOTIFICATION_NOT_FOUND(5008,"该通知已经被删除啦"),
-    NOTIFICATION_INFOR_ERROR(5009,"通知信息有误,账号错误")
+    NOTIFICATION_INFOR_ERROR(5009,"通知信息有误,账号错误"),
+    ORDER_NOT_FOUND(5010,"该订单已经被删除")
     ;
 
     private Integer code;

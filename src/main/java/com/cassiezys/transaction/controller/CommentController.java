@@ -65,7 +65,6 @@ public class CommentController {
     @ResponseBody
     @GetMapping(value = "/comment/{id}")
     public ResultDTO<List<CommentDTO>> commentList(@PathVariable(name = "id")Long id){
-        System.out.println("run this");
         List<CommentDTO> commentdtos = commentService.findByTargetId(id, CommentTypeEnum.COMMENT);
         return ResultDTO.successOf(commentdtos);
     }
