@@ -1,6 +1,7 @@
 package com.cassiezys.transaction.controller;
 
 import com.cassiezys.transaction.dto.CommentDTO;
+import com.cassiezys.transaction.dto.OrderDTO;
 import com.cassiezys.transaction.dto.ProductionDTO;
 import com.cassiezys.transaction.enums.CommentTypeEnum;
 import com.cassiezys.transaction.exception.CustomizeCodeException;
@@ -68,8 +69,9 @@ public class ProductionController {
             if(user == null){
                 throw new CustomizeCodeException(ErrorCodeEnumImp.NO_LOGIN);
             }
-            orderService.createOrder(user.getId(),proid,amount);
+            OrderDTO orderDTO = orderService.createOrder(user.getId(), proid, amount);
 
+            model.addAttribute("orderdto",orderDTO);
             model.addAttribute("section","order");
             model.addAttribute("sectionName","建立订单");
         }

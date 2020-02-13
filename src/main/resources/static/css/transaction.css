@@ -375,6 +375,55 @@
     bottom: 0px;
     left: 18px;
 }
+.order{
+    border-bottom: 1px solid #eaeaea;
+    min-height: 280px;
+}
+.order img{
+    max-width: 200px;
+    max-height: 280px;
+}
+.order .caption{
+    display: inline-block;
+    padding-left: 20px;
+    line-height: 40px;
+}
+.order-info{
+    float: left;
+    width: 790px;
+}
+.order-func{
+    float:right;
+    text-align: right;
+}
+.order-result{
+    font-size: 18px;
+    color: #3c3c3c;
+    line-height: 32px;
+    margin: 11px 0 70px 0;
+    padding: 0 0 0 42px;
+    font-family: 'Hiragino Sans GB',SimHei,SimSun;
+}
+.order-result .ok{
+    color: green;
+    margin-right: 13px;
+    font-size: 28px;
+}
+.order-price{
+    color: #f40;
+    font-size: 16px;
+}
+.order-count{
+    color: #3c3c3c;
+    line-height: 23px;
+}
+.order-btn .btn{
+    padding: 8px 21px;
+    font-size: 18px;
+}
+.order-btn a{
+    color: white;
+}
 /*商品详情页面*/
 /*异常页面*/
 .jumbotron
@@ -382,3 +431,131 @@
     margin: 50px;
 }
 /*异常页面*/
+/*profile.html*/
+.cart-title{
+    margin-top: 5px;
+    font: 12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif;
+}
+.cart-title span:nth-child(-n+4){
+    margin-right: 50px;
+}
+.cart-title span:nth-child(1){
+    margin-left: 20px;
+    margin-right: 270px;
+}
+.cart{
+    border-bottom: 1px solid #eaeaea;
+    min-height: 120px;
+    display: block;
+    font: 12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif;
+}
+.cart img{
+    max-width: 120px;
+    width: auto;
+    border-radius: 5px;
+    height: auto;
+    max-height: 120px;
+}
+.cart .cart-item{
+    display: inline-block;
+    width: 100%;
+    padding-left: 0;
+}
+.cart .td-inner{
+    padding-top: 12px;
+    display: inline-block;
+}
+.cart .td-price{
+    display: inline-block;
+    width: 60px;
+    max-height: 36px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 5px;
+    font-size: 12px;
+}
+.cart .td-purchase{
+    width: 100px;
+}
+.cart .purchase{
+    width: 80px;
+    margin-left: 10px;
+    position: relative;
+    height: 28px;
+    border: 1px solid #b3b3b3;
+    background-color: #f9f8f8;
+    text-align: center;
+    display: table-cell;
+}
+.cart .purchase-control{
+    line-height: 30px;
+    font-size: 16px;
+    padding: 0;
+}
+.cart .purchase-input{
+    height: 31px;
+    text-align: center;
+    border: 0px solid #ccc;
+    padding: 0;
+}
+.item-pic{
+    border: 1px solid #eee;
+    float: left;
+    overflow: hidden;
+    width: 120px;
+    text-align: center;
+}
+.item-info{
+    display: inline-block;
+    width: 180px;
+    max-height: 36px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 5px;
+    font-size: 12px;
+}
+.cart .td-item{
+    list-style-type: disc;
+}
+.cart .td{
+    float: left;
+    min-height: 120px;
+    list-style: none;
+}
+.cart .td-check{
+}
+.cart .cart-checkbox{
+    position: relative;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    overflow: hidden;
+}
+.cart .cart-checkbox input{
+    position: absolute;
+    z-index: 0;
+    left: -20px;
+    top: -20px;
+}
+.cart .cart-checkbox label{
+    position: relative;
+    z-index: 1;
+    float: left;
+    width: 15px;
+    height: 15px;
+    background-position: 0 0;
+    line-height: 200em;
+    overflow: hidden;
+    cursor: pointer;
+}
+.cart .td-sumprice{
+    width: 80px;
+}
+.cart .td-func{
+    line-height: 50px;
+}
+.cart .td-func a{
+    display: block;
+    width: 100px;
+    margin-bottom: 5px;
+}

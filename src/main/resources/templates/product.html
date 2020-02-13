@@ -81,10 +81,7 @@
                     </div>
 
                     <div class="operateButton">
-                        <!--<a th:href="${'/production/order/'+productiondto.id}" class="btn btn-danger btn-addcar"><span class="icon-add_shopping_cart"
-                                                                                      style="color:white;"></span>
-                            加入购物车
-                        </a>-->
+
                         <button type="submit" class="btn btn-danger btn-addcar"><span class="icon-add_shopping_cart"
                                                                                                                       style="color:white;"></span>
                             加入购物车
@@ -231,7 +228,27 @@
 
 </div>
 <div class="container-fluid content-main" th:if="${section == 'order'}">
-
+    <div class="order" >
+        <div class="order-info">
+            <img th:src="${'/'+orderdto.production.picUrl}" alt="">
+            <div class="caption">
+                <h3>已添加商品：<span th:text="${orderdto.production.title}"></span>
+                </h3>
+                发布者：<span th:text="${orderdto.seller.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp;
+                数量：<span th:text="${orderdto.amount}"></span>  ·
+                时间：<span th:text="${#dates.format(orderdto.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+            </div>
+        </div>
+        <div class="order-func">
+            <div class="order-result"><span class="glyphicon glyphicon-ok ok"></span>已成功加入购物车</div>
+            <div class="order-price">小计：￥<span th:text="${orderdto.production.price}">500.00</span></div>
+            <div class="order-count">购物车共有 <span>25 件</span> 商品</div>
+            <div class="order-btn">
+                <a class="btn btn-warning"  th:href="@{'/production/details/'+${orderdto.production.id}}">&lt;返回商品详情</a>
+                <a class="btn btn-danger" th:href="@{'/production/details/'+${orderdto.production.id}}">查看购物车</a>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
 

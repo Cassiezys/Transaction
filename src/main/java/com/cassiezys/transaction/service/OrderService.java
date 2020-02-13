@@ -111,7 +111,7 @@ public class OrderService {
 
     /**
      * 我的购物车
-     * @param id uid  notifierId  建立通知者的id
+     * @param id uid 创建订单creator
      * @return PaginationDTO<OrderDTO>
      */
     public PaginationDTO<OrderDTO> addCartPaginationByUid(Long id) {
@@ -166,11 +166,19 @@ public class OrderService {
      * @param uid 买家id
      * @param proId 商品id
      * @param amount 购买的数量
+     * @return    OrderDTO 订单：包含卖家和商品
      */
-    public void createOrder(Long uid, Long proId, Integer amount) {
+    public OrderDTO createOrder(Long uid, Long proId, Integer amount) {
         Production thisProdt = productionMapper.selectByPrimaryKey(proId);
         if(thisProdt == null){
             throw new CustomizeCodeException(ErrorCodeEnumImp.PRODUCTION_NOT_FOUND);
+        }else{
+            if (thisProdt.getPicUrl().contains(";"))
+            thisProdt.setPicUrl(thisProdt.getPicUrl().substring(0,thisProdt.getPicUrl().indexOf(";")));
+        }
+        User seller = userMapper.selectByPrimaryKey(thisProdt.getCreator());
+        if(seller == null){
+            throw new CustomizeCodeException(ErrorCodeEnumImp.PRODUCTION_CREATOR_NOT_FOUND);
         }
         Orders order = new Orders();
         order.setCreator(uid);
@@ -195,5 +203,13 @@ public class OrderService {
         notification.setOuterid(proId);
         notification.setGmtCreate(System.currentTimeMillis());
         notificationMapper.insert(notification);
+
+        OrderDTO orderDTO = new OrderDTO();
+        BeanUtils.copyProperties(order,orderDTO);
+        orderDTO.setProduction(thisProdt);
+        orderDTO.setSeller(seller);
+        orderDTO.setStatusName(OrderStatusEnum.nameOfStatus(orderDTO.getStatus()));
+
+        return orderDTO;
     }
 }

@@ -12,7 +12,7 @@
 <!--主内容-->
 <div class="container-fluid content-main">
     <div class="row">
-        <!--左边:我卖的商品||回复-->
+        <!--左边:我卖的商品||回复||收藏||订单||购物车-->
         <div class="col-lg-8 col-md-8 col-sm-8">
             <!--我的商品-->
             <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'productions'}">
@@ -33,23 +33,28 @@
                     </div>
                 </div>
             </div>
-            <!--我的订单-->
+            <!--全部订单-->
             <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'orders'}">
                 <div class="list-group">
                     <div class="panel-heading">
-                        <h3 class="panel-title">分类·全部</h3>
+                        <h3 class="panel-title">全部订单</h3>
                     </div>
-                    <div class="prods" th:each="order:${paginationdto.dataDtos}">
-                        <img th:src="${'/'+order.production.picUrl}" alt="">
-                        <div class="caption">
-                            <!--http://localhost:8222/prodction/1-->
-                            <h3><a th:href="@{'/production/'+${order.production.id}}"
-                                   th:text="${order.production.title}">同济七版上下册</a></h3>
-                            &nbsp;&nbsp; ￥<span th:text="${order.production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp;
-                            发布者：<span th:text="${order.seller.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span
-                                th:text="${#dates.format(order.production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+
+                    <div class="order" th:each="order:${paginationdto.dataDtos}">
+                        <div class="order-info">
+                            <img th:src="${'/'+order.production.picUrl}" alt="">
+                            <div class="caption">
+                                <h3>商品名：<span th:text="${order.production.title}"></span>
+                                </h3>
+                                卖家：<span th:text="${order.seller.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp;
+                                数量：<span th:text="${order.amount}"></span>  ·
+                                订单日期：<span th:text="${#dates.format(order.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+                                付款情况：<span th:text="${order.statusName}"></span>
+                                <div class="order-price">小计：￥<span th:text="${order.production.price}">500.00</span></div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <!--最新回复-->
@@ -76,17 +81,81 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">购物车里宝藏多多，记得清理噢~</h3>
                     </div>
-                    <div class="prods" th:each="order:${paginationdto.dataDtos}">
-                        <img th:src="${'/'+order.production.picUrl}" alt="">
-                        <div class="caption">
-                            <!--http://localhost:8222/prodction/1-->
-                            <h3><a th:href="@{'/production/'+${production.id}}"
-                                   th:text="${order.production.title}">同济七版上下册</a></h3>
-                            &nbsp;&nbsp; ￥<span th:text="${order.production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp;
-                            发布者：<span th:text="${order.seller.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span
-                                th:text="${#dates.format(order.production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
-                        </div>
+                    <div class="cart-title">
+                        <h4 class="panel-title"><span>商品</span><span>|单价</span><span>|数量</span><span>|总价</span><span>|操作</span></h4>
                     </div>
+                    <div class="cart" th:each="order:${paginationdto.dataDtos}">
+                        <ul class="cart-item">
+                            <li class="td td-check">
+                                <div class="td-inner">
+                                    <div style="height: 82px;position: relative;">
+
+                                        <div class="cart-checkbox ">
+                                            <input class="J_CheckBoxItem" id="J_CheckBox_1813255392950" type="checkbox" name="items[]" value="1813255392950">
+                                            <label for="J_CheckBox_1813255392950">勾选商品</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="td td-item">
+                                <div class="td-inner">
+                                    <div class="item-pic">
+                                        <img th:src="${'/'+order.production.picUrl}" alt="">
+                                    </div>
+                                    <div class="item-info">
+                                        <a th:href="@{'/production/'+${order.production.id}}"
+                                           th:text="${order.production.title}">同济七版上下册</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="td td-price">
+                                <div class="td-inner">
+                                ￥<span th:id="${'single'+order.id}" th:value="${order.production.price}" th:text="${order.production.price}"></span>
+                                </div>
+                            </li>
+                            <li class="td td-purchase">
+                                <div class="td-inner">
+                                    <div class="purchase row">
+                                        <a class="col-lg-4 col-md-4 col-sm-4 col-xs-4 purchase-control" th:data-id="${order.id}" onclick="subCount(this)"
+                                           href="javascript:void(0);"><span class="glyphicon glyphicon-minus"
+                                                                            aria-hidden="true"></span></a>
+                                        <input name="amount" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 purchase-input" type="text" th:value="${order.amount}"
+                                               th:id="${'inputNum'+order.id}">
+                                        <a class="col-lg-4 col-md-4 col-sm-4 col-xs-4 purchase-control" th:data-id="${order.id}" onclick="addCount(this)"
+                                           href="javascript:void(0);"><span class="glyphicon glyphicon-plus"
+                                                                            aria-hidden="true"></span></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="td td-sumprice">
+                                <div class="td-inner">
+                                    ￥<span th:id="${'thisSum'+order.id}" th:text="${order.amount*order.production.price}"></span>
+                                </div>
+                            </li>
+                            <li class="td td-func">
+                                <div class="td-inner">
+                                    <a class="btn btn-success" href="#">购买</a>
+                                    <a class="btn btn-danger" href="#">删除</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <script>
+                        function addCount(e){
+                            var id = e.getAttribute("data-id");
+                            var singlePrice = parseInt($("#single"+id).text());
+                            var inputNum = (parseInt($("#inputNum"+id).val())+1)>100?1:(parseInt($("#inputNum"+id).val())+1);
+                            $("#inputNum"+id).val(inputNum);
+                            $("#thisSum"+id).html(singlePrice*inputNum);
+                        }
+                        function subCount(e){
+                            var id = e.getAttribute("data-id");
+                            var singlePrice = parseInt($("#single"+id).text());
+                            var inputNum = (parseInt($("#inputNum"+id).val())-1)<1?1:(parseInt($("#inputNum"+id).val())+1);
+                            $("#inputNum"+id).val(inputNum);
+                            $("#thisSum"+id).html(singlePrice*inputNum);
+                        }
+                    </script>
                 </div>
             </div>
             <!--分页-->
@@ -132,13 +201,13 @@
             <div class="list-group">
                 <a href="/profile/productions" class="list-group-item"
                    th:classappend="${section=='productions'}?'active':''">我的宝贝</a>
-                <a href="profile/favorites" class="list-group-item"
+                <a href="/profile/favorites" class="list-group-item"
                    th:classappend="${section=='favorites'}?'active':''">我的收藏</a>
                 <a href="/profile/replies" class="list-group-item" th:classappend="${section=='replies'}?'active':''">最新回复
                     <span class="badge" th:text="${session.unreadCount}">14</span></a>
                 </a>
-                <a href="profile/orders" class="list-group-item">全部订单</a>
-                <a href="profile/cars" class="list-group-item">我的购物车</a>
+                <a href="/profile/orders" class="list-group-item">全部订单</a>
+                <a href="/profile/cart" class="list-group-item">我的购物车</a>
             </div>
         </div>
     </div>
