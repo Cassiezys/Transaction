@@ -169,6 +169,7 @@ public class OrderService {
      * @return    OrderDTO 订单：包含卖家和商品
      */
     public OrderDTO createOrder(Long uid, Long proId, Integer amount) {
+        User thisUser = userMapper.selectByPrimaryKey(uid);
         Production thisProdt = productionMapper.selectByPrimaryKey(proId);
         if(thisProdt == null){
             throw new CustomizeCodeException(ErrorCodeEnumImp.PRODUCTION_NOT_FOUND);
@@ -195,7 +196,8 @@ public class OrderService {
 
         //新增通知
         Notification notification = new Notification();
-        notification.setNotifier(uid);
+        notification.setNotifier(thisUser.getId());
+        notification.setNotifierName(thisUser.getName());
         notification.setStatus(NoticifacionStatusEnum.UNREAD.getStatus());
         notification.setType(NotificationTypeEnum.PRODUCT_SELL.getType());
         notification.setReceiver(thisProdt.getCreator());

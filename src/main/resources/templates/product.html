@@ -241,7 +241,7 @@
         </div>
         <div class="order-func">
             <div class="order-result"><span class="glyphicon glyphicon-ok ok"></span>已成功加入购物车</div>
-            <div class="order-price">小计：￥<span th:text="${orderdto.production.price}">500.00</span></div>
+            <div class="order-price">小计：￥<span th:text="${orderdto.production.price*orderdto.amount}">500.00</span></div>
             <div class="order-count">购物车共有 <span>25 件</span> 商品</div>
             <div class="order-btn">
                 <a class="btn btn-warning"  th:href="@{'/production/details/'+${orderdto.production.id}}">&lt;返回商品详情</a>

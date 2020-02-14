@@ -41,6 +41,18 @@
                     </div>
 
                     <div class="order" th:each="order:${paginationdto.dataDtos}">
+                        <ul class="order-info">
+                            <li>
+                                <div>
+                                    <img th:src="${'/'+order.production.picUrl}" alt="">
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+
+                                </div>
+                            </li>
+                        </ul>
                         <div class="order-info">
                             <img th:src="${'/'+order.production.picUrl}" alt="">
                             <div class="caption">
@@ -50,7 +62,7 @@
                                 数量：<span th:text="${order.amount}"></span>  ·
                                 订单日期：<span th:text="${#dates.format(order.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
                                 付款情况：<span th:text="${order.statusName}"></span>
-                                <div class="order-price">小计：￥<span th:text="${order.production.price}">500.00</span></div>
+                                <div class="order-price">小计：￥<span th:text="${order.production.price*order.amount}">500.00</span></div>
                             </div>
                         </div>
                     </div>
