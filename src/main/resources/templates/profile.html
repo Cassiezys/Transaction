@@ -146,13 +146,35 @@
                             </li>
                             <li class="td td-func">
                                 <div class="td-inner">
-                                    <a class="btn btn-success" href="#">购买</a>
+                                    <a class="btn btn-success" href="javascript:;" th:data-id="${order.id}" onclick="dobuy(this)">购买</a>
                                     <a class="btn btn-danger" href="javascript:;" th:data-id="${order.id}" onclick="deleOrder(this)">删除</a>
                                 </div>
                             </li>
                         </ul>
                     </div>
                     <script>
+                        function dobuy(e) {
+                            var id = e.getAttribute("data-id");
+                            var price = parseFloat($("#thisSum"+id).text());
+                            var count = parseInt($("#inputNum"+id).val());
+                            console.log("id="+id+",total="+price+",count="+count);
+                           /* $.ajax({
+                                type: "GET",
+                                url: "/order",
+                                dataType: "JSON",
+                                contentType: 'application/json',
+                                data: {
+                                    "id": id,
+                                    "total":price,
+                                    "amount":count
+                                },
+                                success:function (ret) {
+                                    console.log(ret)
+                                }
+
+                            })*/
+                           location.href="/order?id="+id+"&total="+price+"&amount="+count;
+                        }
                         function addCount(e){
                             var id = e.getAttribute("data-id");
                             var singlePrice = parseFloat($("#single"+id).text());
@@ -189,6 +211,17 @@
                         }
                     </script>
                 </div>
+            </div>
+            <!--支付成功-->
+            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'okpay'}">
+                trade_no:<span th:text="${tradeno}"></span><br/>
+                out_trade_no:<span th:text="${outtradeno}"></span><br/>
+                total_amount:<span th:text="${totalamount}"></span>
+                <span th:text="${error}" th:if="${error}"></span>
+            </div>
+            <!--支付失败页面-->
+            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'tradepaypost'}">
+                <span th:text="${message}" ></span>
             </div>
             <!--分页-->
             <div class="col-lg-12 col-md-12 col-sm-12" th:if="${paginationdto.page!=0}">

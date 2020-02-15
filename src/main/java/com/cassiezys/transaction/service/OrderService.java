@@ -123,6 +123,9 @@ public class OrderService {
                 .andStatusEqualTo(OrderStatusEnum.UNPAY.getStatus());
         int totalOrders = (int) ordersMapper.countByExample(ordersExample);
         List<Orders> orders = ordersMapper.selectByExample(ordersExample);
+        if (orders.size() ==0 ){
+            throw new CustomizeCodeException(ErrorCodeEnumImp.ORDERS_NOT_EXIST);
+        }
 
         //获取 卖家set 转为 list 在转为以id为key的map
         Set<Long> sellerIdSet = orders.stream().map(order -> order.getReceiver()).collect(Collectors.toSet());
@@ -215,11 +218,48 @@ public class OrderService {
         return orderDTO;
     }
 
-    public void delOrder(Long uid, Long oid) {
+    /**
+     * 删除订单
+     * @param oid
+     */
+    public void delOrder(Long oid) {
         Orders order = ordersMapper.selectByPrimaryKey(oid);
         if (order == null){
             throw new CustomizeCodeException(ErrorCodeEnumImp.ORDER_NOT_FOUND);
         }
         ordersMapper.deleteByPrimaryKey(oid);
+    }
+
+    /**
+     * @param id 订单id
+     * @param count 更新的数量
+     * @return 订单
+     */
+    public Orders updateOrderById(Long id, Integer count) {
+        Orders thisOrder = ordersMapper.selectByPrimaryKey(id);
+        if (thisOrder == null){
+            throw new CustomizeCodeException(ErrorCodeEnumImp.ORDER_NOT_FOUND);
+        }
+        if (count != thisOrder.getAmount()){
+            thisOrder.setAmount(count);
+            ordersMapper.updateByPrimaryKey(thisOrder);
+        }
+        return thisOrder;
+    }
+
+    /**
+     * 支付成功
+     * @param oid
+     * 删除订单 减少库存 通知卖家 通知买家
+     */
+    public void payOK(Long oid) {
+        Orders thisOrder = ordersMapper.selectByPrimaryKey(oid);
+        //删除订单
+        delOrder(oid);
+        //减少库存
+
+        //通知卖家
+
+        //通知买家
     }
 }
