@@ -39,7 +39,7 @@
     </select>
 
     <select id="selectByQuery" parameterType="com.cassiezys.transaction.dto.ProductQueryDTO" resultMap="BaseResultMap">
-        select * from production
+        select * from production where amount!=0
         order by gmt_modified desc limit #{page},#{size}
     </select>
 </mapper>

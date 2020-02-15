@@ -432,6 +432,22 @@
 }
 /*异常页面*/
 /*profile.html*/
+.allorder{
+    width: 420px;
+}
+.allorder h4{
+    line-height: 23px;
+    margin-top: 0;
+    padding-left: 126px;
+    font-size: 15px;
+}
+.allorder img{
+    float: left;
+}
+.cart .td-payment{
+    line-height: 120px;
+    padding-left: 36px;
+}
 .cart-title{
     margin-top: 5px;
     font: 12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif;
@@ -460,6 +476,7 @@
     display: inline-block;
     width: 100%;
     padding-left: 0;
+    list-style: none;
 }
 .cart .td-inner{
     padding-top: 12px;

@@ -51,6 +51,12 @@ public class AlipayProvider {
         return alipayClient;
     }
 
+    /**
+     * 创建支付码
+     * @param order
+     * @param total
+     * @return
+     */
     public AlipayTradePagePayRequest trade_precreate(Orders order, Float total) {
 
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
@@ -66,18 +72,22 @@ public class AlipayProvider {
         String subject = order.getOuterTitle();
         //商品描述，可空
         String body = "商品描述(自定义)";
-        System.out.println(timeout_express);
         alipayRequest.setBizContent("{\"out_trade_no\":\"" + out_trade_no + "\","
                 + "\"total_amount\":\"" + total_amount + "\","
                 + "\"subject\":\"" + subject + "\","
                 + "\"body\":\"" + body + "\","
-             //*   + "\"timeout_express\":\""+ timeout_express +"\","
+                + "\"timeout_express\":\""+ timeout_express +"\","
                 + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
 
         return alipayRequest;
 
     }
 
+    /**
+     * notify 和 return 中需要得到 支付宝返回过来的信息
+     * @param params
+     * @return
+     */
     public boolean signature(Map params) {
         try {
             return AlipaySignature.rsaCheckV1(params, alipayPulicKey, "utf-8", "RSA2"); //调用SDK验证签名

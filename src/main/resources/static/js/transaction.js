@@ -1,5 +1,6 @@
 /*product.html*/
 $(function () {
+    var maxamount= parseInt($("#maxamount").val());
     $("#inputNum").keypress(function (input) {
         var keyCode = input.keyCode ? input.keyCode : input.charCode;
         if(keyCode !=0 && (keyCode <48 || keyCode>57) && keyCode !=8 && keyCode != 37 &&keyCode!=39){
@@ -23,6 +24,11 @@ $(function () {
     });
     $("#add").click(function () {
         var numVal = parseInt($("#inputNum").val()) || 0;
+        console.log(maxamount);
+        if(numVal >maxamount-1){
+            numVal = maxamount-1;
+            alert("已到最大值")
+        }
         $("#inputNum").val(numVal+1);
     });
     $("#sub").click(function () {

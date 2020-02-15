@@ -73,9 +73,6 @@ public class OrderController {
     public String doPost(HttpServletRequest request,
                          HttpServletResponse response,
                          Model model){
-        System.out.println("post方法");
-        model.addAttribute("session","tradepaypost");
-        model.addAttribute("sessionName","支付页面");
         try {
             response.setContentType("text/html;charset=UTF-8");
             request.setCharacterEncoding("UTF-8");
@@ -89,7 +86,6 @@ public class OrderController {
          * 说明：
          * 以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己网站的需要，按照技术文档编写,并非一定要使用该代码。
          * 该代码仅供学习和研究支付宝接口使用，只是提供一个参考。
-
 
          *************************页面功能说明*************************
          * 创建该页面文件时，请留心该页面文件中无任何HTML代码及空格。
@@ -155,14 +151,14 @@ public class OrderController {
                 //判断该笔订单是否在商户网站中已经做过处理
                 //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 //如果有做过处理，不执行商户的业务程序
-
+                System.out.println("123");
                 //注意：
                 //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
             }else if (trade_status.equals("TRADE_SUCCESS")){
                 //判断该笔订单是否在商户网站中已经做过处理
                 //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 //如果有做过处理，不执行商户的业务程序
-
+                System.out.println("456");
                 //注意：
                 //付款完成后，支付宝系统发送该交易状态通知
             }
@@ -194,7 +190,6 @@ public class OrderController {
     public String doGet(HttpServletRequest request,
                         HttpServletResponse response,
                         Model model){
-        System.out.println("支付成功");
         //获取支付宝GET过来反馈信息
         Map<String,String> params = new HashMap<String,String>();
         Map<String,String[]> requestParams = request.getParameterMap();

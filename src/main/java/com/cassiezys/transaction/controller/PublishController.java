@@ -62,6 +62,7 @@ public class PublishController {
         model.addAttribute("category", productionDTO.getCategory());
         model.addAttribute("price", productionDTO.getPrice());
         model.addAttribute("origprice", productionDTO.getOrigprice());
+        model.addAttribute("amount",productionDTO.getAmount());
         model.addAttribute("tele", productionDTO.getTele());
         model.addAttribute("tencent", productionDTO.getTencent());
         model.addAttribute("wechat", productionDTO.getWechat());
@@ -85,6 +86,7 @@ public class PublishController {
     public String doPublish(@RequestParam(value = "city", required = false) String city,
                             @RequestParam(value = "title", required = false) String title,
                             @RequestParam(value = "description", required = false) String description,
+                            @RequestParam(value = "amount",required = false,defaultValue = "1")Integer amount,
                             @RequestParam(value = "pics", required = false) MultipartFile[] pics,
                             @RequestParam(value = "price", required = false) Float price,
                             @RequestParam(value = "origprice", required = false) Float origprice,
@@ -108,6 +110,7 @@ public class PublishController {
         model.addAttribute("category", category);
         model.addAttribute("price", price);
         model.addAttribute("origprice", origprice);
+        model.addAttribute("amount", amount);
         model.addAttribute("tele", tele);
         model.addAttribute("tencent", tencent);
         model.addAttribute("wechat", wechat);
@@ -187,6 +190,7 @@ public class PublishController {
         production.setDescription(description);
         production.setPrice(price);
         production.setOrigprice(origprice);
+        production.setAmount(amount);
         production.setTele(tele);
         production.setTencent(tencent);
         production.setCreator(user.getId());

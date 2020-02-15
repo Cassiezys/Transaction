@@ -13,6 +13,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,29 +185,34 @@ public class OrderService {
         if(seller == null){
             throw new CustomizeCodeException(ErrorCodeEnumImp.PRODUCTION_CREATOR_NOT_FOUND);
         }
+        OrdersExample ordersExample = new OrdersExample();
+        ordersExample.createCriteria()
+                .andCreatorEqualTo(uid)
+                .andOuteridEqualTo(proId)
+                .andStatusEqualTo(0);
+        List<Orders> preOrders = ordersMapper.selectByExample(ordersExample);
         Orders order = new Orders();
-        order.setCreator(uid);
-        order.setAddress(thisProdt.getAddress());
-        order.setAmount(amount);
-        order.setGmtCreate(System.currentTimeMillis());
-        order.setGmtModified(order.getGmtCreate());
-        order.setOuterid(proId);
-        order.setOuterTitle(thisProdt.getTitle());
-        order.setReceiver(thisProdt.getCreator());
-        order.setStatus(OrderStatusEnum.UNPAY.getStatus());
-        order.setTele(thisProdt.getTele());
-        ordersMapper.insert(order);
+        if(preOrders.size()!=0){
+            order = preOrders.get(0);
+            amount = order.getAmount()+amount;
+            order.setAmount(amount);
+            ordersMapper.updateByPrimaryKey(order);
+        }else{
+            order.setCreator(uid);
+            order.setAddress(thisProdt.getAddress());
+            order.setAmount(amount);
+            order.setGmtCreate(System.currentTimeMillis());
+            order.setGmtModified(order.getGmtCreate());
+            order.setOuterid(proId);
+            order.setOuterTitle(thisProdt.getTitle());
+            order.setReceiver(thisProdt.getCreator());
+            order.setStatus(OrderStatusEnum.UNPAY.getStatus());
+            order.setTele(thisProdt.getTele());
+            ordersMapper.insert(order);
+        }
 
         //新增通知
-        Notification notification = new Notification();
-        notification.setNotifier(thisUser.getId());
-        notification.setNotifierName(thisUser.getName());
-        notification.setStatus(NoticifacionStatusEnum.UNREAD.getStatus());
-        notification.setType(NotificationTypeEnum.PRODUCT_SELL.getType());
-        notification.setReceiver(thisProdt.getCreator());
-        notification.setOuterTitle(thisProdt.getTitle());
-        notification.setOuterid(proId);
-        notification.setGmtCreate(System.currentTimeMillis());
+        Notification notification = addNotification(thisUser, thisProdt, NotificationTypeEnum.PRODUCT_BOOK.getType());
         notificationMapper.insert(notification);
 
         OrderDTO orderDTO = new OrderDTO();
@@ -231,6 +237,7 @@ public class OrderService {
     }
 
     /**
+     * 更新要支付的订单数量
      * @param id 订单id
      * @param count 更新的数量
      * @return 订单
@@ -250,16 +257,48 @@ public class OrderService {
     /**
      * 支付成功
      * @param oid
-     * 删除订单 减少库存 通知卖家 通知买家
+     * 更新订单付款状态 减少库存 通知卖家 通知买家
      */
+    @Transactional
     public void payOK(Long oid) {
         Orders thisOrder = ordersMapper.selectByPrimaryKey(oid);
-        //删除订单
-        delOrder(oid);
+        User buyer = userMapper.selectByPrimaryKey(thisOrder.getCreator());
+        //更新订单状态
+        thisOrder.setStatus(OrderStatusEnum.PAID.getStatus());
+        ordersMapper.updateByPrimaryKey(thisOrder);
         //减少库存
+        Production thisProdt = productionMapper.selectByPrimaryKey(thisOrder.getOuterid());
+        int kucun = thisProdt.getAmount()-thisOrder.getAmount();
+        if(kucun == 0){
+            notificationMapper.insert(addNotification(buyer,thisProdt,NotificationTypeEnum.PRODUCT_EMPTY.getType()));
+        }
+        thisProdt.setAmount(thisProdt.getAmount()-thisOrder.getAmount());
+        productionMapper.updateByPrimaryKey(thisProdt);
 
         //通知卖家
+        Notification notification = addNotification(buyer, thisProdt, NotificationTypeEnum.PRODUCT_SELL.getType());
+        notificationMapper.insert(notification);
 
         //通知买家
+        notification = addNotification(buyer, thisProdt, NotificationTypeEnum.PRODUCT_SELL.getType());
+        notificationMapper.insert(notification);
+    }
+
+    /** A B C
+     * @param notifier A B
+     * @param thisProdt C
+     * @param notiType
+     */
+    private Notification addNotification(User notifier, Production thisProdt, int notiType) {
+        Notification notification = new Notification();
+        notification.setNotifier(notifier.getId());
+        notification.setNotifierName(notifier.getName());
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setOuterid(thisProdt.getId());
+        notification.setOuterTitle(thisProdt.getTitle());
+        notification.setReceiver(thisProdt.getCreator());
+        notification.setType(notiType);
+        notification.setStatus(NoticifacionStatusEnum.UNREAD.getStatus());
+        return notification;
     }
 }

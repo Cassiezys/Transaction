@@ -3,7 +3,9 @@ package com.cassiezys.transaction.enums;
 public enum NotificationTypeEnum {
     REPLY_PRODUCTION(1,"评论了商品"),
     REPLY_COMMENT(2,"回复了评论"),
-    PRODUCT_SELL(3,"购买了商品")
+    PRODUCT_SELL(3,"购买了商品"),
+    PRODUCT_BOOK(4,"下了订单"),
+    PRODUCT_EMPTY(5,"买完了商品")
     ;
     private int type;
     private String name;

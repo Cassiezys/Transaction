@@ -39,6 +39,9 @@ content_production
   `category` varchar(64) DEFAULT NULL COMMENT '商品类别：手机/电脑',
   PRIMARY KEY (`id`)
 }
+ALTER TABLE `production`
+ADD COLUMN `amount`  int(11) NULL DEFAULT 1 COMMENT '个数' AFTER `amount`;
+
  private Long id,creator
  String title,description;
      private Long gmtCreate;

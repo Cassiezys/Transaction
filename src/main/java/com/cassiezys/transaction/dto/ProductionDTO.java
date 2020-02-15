@@ -29,6 +29,7 @@ public class ProductionDTO {
     private Integer viewCount;
     private Integer commentCount;
     private Integer LikeCount;
+    private Integer amount;
     //  上方均为 up all contain Prodution production;
     private User user;
     /*组合用户 首頁 */

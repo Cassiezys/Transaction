@@ -29,6 +29,7 @@
                             &nbsp;&nbsp; ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp;
                             发布者：<span th:text="${production.user.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span
                                 th:text="${#dates.format(production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+                            库存：<span th:text="${production.amount}"> 77</span>
                         </div>
                     </div>
                 </div>
@@ -40,29 +41,35 @@
                         <h3 class="panel-title">全部订单</h3>
                     </div>
 
-                    <div class="order" th:each="order:${paginationdto.dataDtos}">
-                        <ul class="order-info">
-                            <li>
-                                <div>
-                                    <img th:src="${'/'+order.production.picUrl}" alt="">
+                    <div class="cart " th:each="order:${paginationdto.dataDtos}">
+                        <ul class="cart-item">
+                            <li class="td">
+                                <div class="td-inner allorder">
+                                    <img class="" th:src="${'/'+order.production.picUrl}" alt="">
+                                    <h4>商品名：<span th:text="${order.production.title}"></span><br>
+                                    卖家：<span th:text="${order.seller.name}">曾念念</span> &nbsp; &nbsp;&nbsp;&nbsp;<br>
+                                    订单日期：<span th:text="${#dates.format(order.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span></h4>
                                 </div>
                             </li>
-                            <li>
-                                <div>
-
+                            <li class="td">
+                                <div class="td-inner">
+                                    <h4>
+                                        数量：<span th:text="${order.amount}"></span>  ·
+                                        <div class="order-price">小计：￥<span th:text="${order.production.price*order.amount}">500.00</span></div>
+                                    </h4>
+                                </div>
+                            </li>
+                            <li class="td td-payment" >
+                                <div class="td-inner">
+                                    <h4>
+                                        付款情况：<span th:text="${order.statusName}"></span>
+                                    </h4>
                                 </div>
                             </li>
                         </ul>
                         <div class="order-info">
-                            <img th:src="${'/'+order.production.picUrl}" alt="">
                             <div class="caption">
-                                <h3>商品名：<span th:text="${order.production.title}"></span>
-                                </h3>
-                                卖家：<span th:text="${order.seller.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp;
-                                数量：<span th:text="${order.amount}"></span>  ·
-                                订单日期：<span th:text="${#dates.format(order.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
-                                付款情况：<span th:text="${order.statusName}"></span>
-                                <div class="order-price">小计：￥<span th:text="${order.production.price*order.amount}">500.00</span></div>
+
                             </div>
                         </div>
                     </div>
@@ -79,7 +86,7 @@
                         <div class="media-body">
                             <p class="media-heading">
                                 <span th:text="${notification.notifierName + ' ' + notification.typeName + ' '}"></span>
-                                <a th:href="@{'/notification/'+${notification.id}}"
+                                <a th:href="@{'/production/'+${notification.production.id}}"
                                    th:text="${notification.outerTitle}"></a>
                                 <span class="label label-danger" th:if="${notification.status == 0}">未读</span>
                             </p>
@@ -133,6 +140,7 @@
                                                                             aria-hidden="true"></span></a>
                                         <input name="amount" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 purchase-input" type="text" th:value="${order.amount}"
                                                th:id="${'inputNum'+order.id}">
+                                        <input type="hidden" th:id="${'maxamount-'+order.id}"+ th:value="${order.production.amount}">
                                         <a class="col-lg-4 col-md-4 col-sm-4 col-xs-4 purchase-control" th:data-id="${order.id}" onclick="addCount(this)"
                                            href="javascript:void(0);"><span class="glyphicon glyphicon-plus"
                                                                             aria-hidden="true"></span></a>
@@ -152,76 +160,71 @@
                             </li>
                         </ul>
                     </div>
-                    <script>
-                        function dobuy(e) {
-                            var id = e.getAttribute("data-id");
-                            var price = parseFloat($("#thisSum"+id).text());
-                            var count = parseInt($("#inputNum"+id).val());
-                            console.log("id="+id+",total="+price+",count="+count);
-                           /* $.ajax({
-                                type: "GET",
-                                url: "/order",
-                                dataType: "JSON",
-                                contentType: 'application/json',
-                                data: {
-                                    "id": id,
-                                    "total":price,
-                                    "amount":count
-                                },
-                                success:function (ret) {
-                                    console.log(ret)
-                                }
-
-                            })*/
-                           location.href="/order?id="+id+"&total="+price+"&amount="+count;
-                        }
-                        function addCount(e){
-                            var id = e.getAttribute("data-id");
-                            var singlePrice = parseFloat($("#single"+id).text());
-                            var inputNum = (parseInt($("#inputNum"+id).val())+1)>100?1:(parseInt($("#inputNum"+id).val())+1);
-                            $("#inputNum"+id).val(inputNum);
-                            $("#thisSum"+id).html(singlePrice*inputNum);
-                        }
-                        function subCount(e){
-                            var id = e.getAttribute("data-id");
-                            var singlePrice = parseFloat($("#single"+id).text());
-                            var inputNum = (parseInt($("#inputNum"+id).val())-1)<1?1:(parseInt($("#inputNum"+id).val())-1);
-                            $("#inputNum"+id).val(inputNum);
-                            $("#thisSum"+id).html(singlePrice*inputNum);
-                        }
-                        function deleOrder(e) {
-                            var del = confirm("你确定要删除订单吗？");
-                            var oid = e.getAttribute("data-id");
-                            if(del){
-                                $.ajax({
-                                    type: "GET",
-                                    url: "/order/"+oid,
-                                    contentType: 'application/json',
-                                    success:function (ret) {
-                                        if(ret.code === 2120){
-                                            //刷新页面
-                                            window.location.reload();
-                                        }else{
-                                            alert("删除失败");
-                                        }
-                                    },
-                                    dataType: "json"
-                                })
-                            }
-                        }
-                    </script>
                 </div>
-            </div>
-            <!--支付成功-->
-            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'okpay'}">
-                trade_no:<span th:text="${tradeno}"></span><br/>
-                out_trade_no:<span th:text="${outtradeno}"></span><br/>
-                total_amount:<span th:text="${totalamount}"></span>
-                <span th:text="${error}" th:if="${error}"></span>
-            </div>
-            <!--支付失败页面-->
-            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'tradepaypost'}">
-                <span th:text="${message}" ></span>
+                <script>
+                    function dobuy(e) {
+                        var id = e.getAttribute("data-id");
+                        var price = parseFloat($("#thisSum"+id).text());
+                        var count = parseInt($("#inputNum"+id).val());
+                        console.log("id="+id+",total="+price+",count="+count);
+                        /* $.ajax({
+                             type: "GET",
+                             url: "/order",
+                             dataType: "JSON",
+                             contentType: 'application/json',
+                             data: {
+                                 "id": id,
+                                 "total":price,
+                                 "amount":count
+                             },
+                             success:function (ret) {
+                                 console.log(ret)
+                             }
+
+                         })*/
+                        location.href="/order?id="+id+"&total="+price+"&amount="+count;
+                    }
+                    function addCount(e){
+                        var id = e.getAttribute("data-id");
+                        var maxamount = parseInt($("#maxamount-"+id).val());
+                        var singlePrice = parseFloat($("#single"+id).text());
+                        var inputNum = parseInt($("#inputNum"+id).val());
+                        if(inputNum>maxamount-1){
+                            alert("已到最大值")
+                        }else{
+                            ++inputNum;
+                        }
+                        $("#inputNum"+id).val(inputNum);
+                        $("#thisSum"+id).html(singlePrice*inputNum);
+                    }
+                    function subCount(e){
+                        var id = e.getAttribute("data-id");
+                        var singlePrice = parseFloat($("#single"+id).text());
+                        var inputNum = (parseInt($("#inputNum"+id).val())-1)<1?1:(parseInt($("#inputNum"+id).val())-1);
+                        $("#inputNum"+id).val(inputNum);
+                        $("#thisSum"+id).html(singlePrice*inputNum);
+                    }
+                    function deleOrder(e) {
+                        var del = confirm("你确定要删除订单吗？");
+                        var oid = e.getAttribute("data-id");
+                        if(del){
+                            $.ajax({
+                                type: "GET",
+                                url: "/order/"+oid,
+                                contentType: 'application/json',
+                                success:function (ret) {
+                                    if(ret.code === 2120){
+                                        //刷新页面
+                                        window.location.reload();
+                                    }else{
+                                        alert("删除失败");
+                                    }
+                                },
+                                dataType: "json"
+                            })
+                        }
+                    }
+                </script>
             </div>
             <!--分页-->
             <div class="col-lg-12 col-md-12 col-sm-12" th:if="${paginationdto.page!=0}">
