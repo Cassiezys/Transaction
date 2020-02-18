@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  * @ResponseBody：自动序列化成json
  * 需要返回ModelAndView（controller默认写return "index";）所以这里返回ModelAndView自动渲染到的那个error.html页面
  * 通过Model将message放到页面
+ * 统一异常处理
  */
 @ControllerAdvice
 public class CustomizeExceptionHandler {
