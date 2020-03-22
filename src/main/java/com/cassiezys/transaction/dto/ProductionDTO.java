@@ -32,5 +32,6 @@ public class ProductionDTO {
     private Integer amount;
     //  上方均为 up all contain Prodution production;
     private User user;
+    private int Status;//收藏情况
     /*组合用户 首頁 */
 }

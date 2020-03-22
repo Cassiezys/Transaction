@@ -38,6 +38,7 @@
         <table tableName="comment" domainObjectName="Comment" ></table>
         <table tableName="notification" domainObjectName="Notification" ></table>
         <table tableName="orders" domainObjectName="Orders" ></table>
+        <table tableName="operate" domainObjectName="Operate" ></table>
 
     </context>
 </generatorConfiguration>

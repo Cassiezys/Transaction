@@ -5,12 +5,11 @@ import com.cassiezys.transaction.dto.ProductQueryDTO;
 import com.cassiezys.transaction.dto.ProductionDTO;
 import com.cassiezys.transaction.exception.CustomizeCodeException;
 import com.cassiezys.transaction.exception.ErrorCodeEnumImp;
+import com.cassiezys.transaction.mapper.OperateMapper;
 import com.cassiezys.transaction.mapper.ProductionExtMapper;
 import com.cassiezys.transaction.mapper.ProductionMapper;
 import com.cassiezys.transaction.mapper.UserMapper;
-import com.cassiezys.transaction.model.Production;
-import com.cassiezys.transaction.model.ProductionExample;
-import com.cassiezys.transaction.model.User;
+import com.cassiezys.transaction.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +40,8 @@ public class ProductionService {
     private ProductionExtMapper productionExtMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private OperateMapper operateMapper;
 
     private String filePath = "src/main/resources/static/upload-dir";
     private String realPath = "src/main/resources/static/upload-dir";
@@ -126,15 +128,21 @@ public class ProductionService {
 
 
     /**
-     * 所有商品的page页
+     * 所有包含keyword商品的page页
      * @param page
      * @param size
      * @return
      */
-    public PaginationDTO<ProductionDTO> addPagination(Integer page, Integer size) {
+    public PaginationDTO<ProductionDTO> addPagination(String keyword, Integer page, Integer size) {
         PaginationDTO<ProductionDTO> paginationDTO = new PaginationDTO<>();
         ProductQueryDTO productQueryDTO = new ProductQueryDTO();
-
+        if(!StringUtils.isBlank((keyword))){
+            keyword= StringUtils.replace(keyword," ","|");
+            System.out.println(keyword);
+        }else{
+            keyword=null;
+        }
+        productQueryDTO.setKeyword(keyword);
         int totalPro = productionExtMapper.countByQuery(productQueryDTO);
         if (totalPro % size ==0){
             paginationDTO.setTotalPage(totalPro / size);
@@ -176,7 +184,7 @@ public class ProductionService {
      * @param proid 商品id
      * @return 商品以及其卖家信息
      */
-    public ProductionDTO findByPid(Long proid) {
+    public ProductionDTO findByPid(User user,Long proid) {
         ProductionDTO productionDTO = new ProductionDTO();
         Production thisPrdt = productionMapper.selectByPrimaryKey(proid);
         if(thisPrdt == null){
@@ -185,6 +193,20 @@ public class ProductionService {
         User thisUser = userMapper.selectByPrimaryKey(thisPrdt.getCreator());
         BeanUtils.copyProperties(thisPrdt,productionDTO);
         productionDTO.setUser(thisUser);
+        if(user==null){
+            productionDTO.setStatus(0);
+        }else{
+            OperateExample operateExample = new OperateExample();
+            operateExample.createCriteria()
+                    .andCreatorEqualTo(user.getId())
+                    .andParentIdEqualTo(proid);
+            List<Operate> operates= operateMapper.selectByExample(operateExample);
+            if(operates.size()==0) {
+                productionDTO.setStatus(0);
+            }else{
+                productionDTO.setStatus(operates.get(0).getStatus());
+            }
+        }
         return productionDTO;
     }
 

@@ -22,6 +22,12 @@
         <result column="category" jdbcType="VARCHAR" property="category" />
     </resultMap>
 
+    <update id="incLikeCount" parameterType="com.cassiezys.transaction.model.Production" >
+        update production
+        set like_count = like_count + #{likeCount,jdbcType=INTEGER}
+        where id = #{id}
+    </update>
+
     <update id="incViewCount" parameterType="com.cassiezys.transaction.model.Production" >
         update production
         set view_count = view_count + #{viewCount,jdbcType=INTEGER}
@@ -36,10 +42,18 @@
 
     <select id="countByQuery" parameterType="com.cassiezys.transaction.dto.ProductQueryDTO" resultType="java.lang.Integer">
         select count(*) from production
+        <where>
+            <if test="keyword!=null">
+                and title regexp #{keyword}
+            </if>
+        </where>
     </select>
 
     <select id="selectByQuery" parameterType="com.cassiezys.transaction.dto.ProductQueryDTO" resultMap="BaseResultMap">
         select * from production where amount!=0
+        <if test="keyword!=null">
+            and title regexp #{keyword}
+        </if>
         order by gmt_modified desc limit #{page},#{size}
     </select>
 </mapper>

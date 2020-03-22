@@ -7,6 +7,12 @@ import java.util.List;
 
 public interface ProductionExtMapper {
     /**
+     * 自增收藏数目
+     * @param production
+     * @return
+     */
+    int incLikeCount(Production production);
+    /**
      * 自增阅读量
      * @param production
      * @return

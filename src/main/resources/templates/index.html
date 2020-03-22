@@ -55,6 +55,7 @@
                         <!--http://localhost:8222/prodction/1-->
                         <h3><a th:href="@{'/production/details/'+${production.id}}" th:text="${production.title}">同济七版上下册</a></h3>
                       &nbsp;&nbsp;  ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp; 发布者：<span th:text="${production.user.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span th:text="${#dates.format(production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+                        &nbsp;·&nbsp;&nbsp;收藏数：<span th:text="${production.likeCount}"></span>
                     </div>
                 </div>
             </div>

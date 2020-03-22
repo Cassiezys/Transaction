@@ -87,7 +87,7 @@
                                                                                                                       style="color:white;"></span>
                             加入购物车
                         </button>
-                        <a href="#" class="btn-collect">收藏</a>
+                        <button type="button" id="favorbtn" th:data-id="${productiondto.id}" onclick="addFavor(this)" th:class="${productiondto.status==0?'btn-collect':'favor btn-collect'}">收藏</button>
                     </div>
 
                     <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -174,7 +174,7 @@
                         <div class="media-left">
                             <a href="#">
                                 <img class="media-object img-rounded"
-                                     th:src="${session.user}==null?'/images/default-user.jpg':${productiondto.user.avatarUrl}">
+                                     th:src="${session.user.avatarUrl}==null?'/images/default-user.jpg':${productiondto.user.avatarUrl}">
                             </a>
                         </div>
                         <div class="media-body">

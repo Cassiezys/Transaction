@@ -97,7 +97,7 @@ function secondComment(e) {
     var commentfuc = $("#comment-"+id);
     if(commentfuc.hasClass("in")){
         commentfuc.removeClass("in");
-
+        commentfuc.empty();
     }else{
         //获取该评论的回复+展开二级评论区
         /*$.getJSON('/comment/'+id,function(data){
@@ -139,6 +139,45 @@ function secondComment(e) {
         commentfuc.addClass("in");
     }
 
+}
+function addFavor(e){
+    var pid = e.getAttribute("data-id");
+    var status=0;
+    if($("#favorbtn").hasClass("favor")){
+        //删除收藏
+        $("#favorbtn").removeClass("favor");
+        status=0;
+    }else{
+        //添加收藏
+        $("#favorbtn").addClass("favor");
+        status=1;
+    }
+    //都要修改数据库中的内容
+    $.ajax({
+        type:"GET",
+        url:"/production/modifyfavor/"+pid+"/"+status,
+        data:{
+          "pid":pid,
+          "status":status
+        },
+        contentType:'application/json',
+        success: function (ret) {
+            console.log("working"+ret);
+
+            if(ret.code == 5000){
+                var login = confirm(ret.message);
+                if(login){
+                    //确定登录
+                    window.open("http://localhost:8222/login");
+                    //来记录关闭该open打开的窗口
+                    window.localStorage.setItem("toclose",true);
+                }
+            }else{
+                alert(ret.code+ret.message);
+            }
+        },
+        dataType:"json"
+    })
 }
 /*production.html*/
 
@@ -185,3 +224,4 @@ $("#upload").change(function () {
 });
 
 })
+

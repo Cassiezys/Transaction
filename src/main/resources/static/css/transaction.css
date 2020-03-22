@@ -186,6 +186,12 @@
 .ex-slide{width: 100%; height: 474px;}
 .ex-slide ul.focus-bg li{width: 100%; height: 474px;}
 
+
+.favor{
+    background: #4b4748;
+    color: #f494b7;
+}
+
 .info-pic
 {
     border: 1px solid #eaeaf0;

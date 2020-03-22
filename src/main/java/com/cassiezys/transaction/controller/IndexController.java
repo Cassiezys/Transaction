@@ -39,8 +39,9 @@ public class IndexController {
     @GetMapping("/")
     public String index(@RequestParam(name = "page",defaultValue = "1")Integer page,
                         @RequestParam(name = "size",defaultValue = "5")Integer size,
+                        @RequestParam(name="keyword",required = false)String keyword,
                         Model model){
-        PaginationDTO<ProductionDTO> paginationDTO = productionService.addPagination(page,size );
+        PaginationDTO<ProductionDTO> paginationDTO = productionService.addPagination(keyword,page,size );
 
         model.addAttribute("paginationdto",paginationDTO);
         return "index";

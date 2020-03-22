@@ -52,8 +52,10 @@ public class PublishController {
      */
     @GetMapping("/publish/{proId}")
     public String doModify(@PathVariable(name = "proId") Long proId,
-                           Model model) {
-        ProductionDTO productionDTO = productionService.findByPid(proId);
+                           Model model,
+                           HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        ProductionDTO productionDTO = productionService.findByPid(user,proId);
         model.addAttribute("cities", CityCache.get());
         model.addAttribute("categories", CategoryCache.get());
         model.addAttribute("city", productionDTO.getCity());
