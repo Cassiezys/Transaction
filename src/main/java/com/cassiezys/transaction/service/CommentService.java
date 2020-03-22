@@ -37,6 +37,8 @@ public class CommentService {
     private ProductionExtMapper productionExtMapper;
     @Autowired
     private NotificationMapper notificationMapper;
+    @Autowired
+    private OperateMapper operateMapper;
 
     /**
      * 返回该商品的评论 或者 是评论的回复
@@ -44,7 +46,7 @@ public class CommentService {
      * @param commentTypeEnum （1)级问题评论 或(2)级回复评论
      * @return 评论/回复
      */
-    public List<CommentDTO> findByTargetId(Long targetId, CommentTypeEnum commentTypeEnum) {
+    public List<CommentDTO> findByTargetId(User loginuser, Long targetId, CommentTypeEnum commentTypeEnum) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(targetId)
@@ -54,6 +56,7 @@ public class CommentService {
         if(commentList.size() ==0){
             return new ArrayList<>();
         }
+
         /*先找所有需要查找的用户*/
         Set<Long> userIdSet = commentList.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
         List<Long> userIdList = new ArrayList<>();
@@ -72,6 +75,21 @@ public class CommentService {
             return commentDTO;
         }).collect(Collectors.toList());
 
+        if(commentTypeEnum==CommentTypeEnum.QUESTION){
+            OperateExample operateExample = new OperateExample();
+            operateExample.createCriteria()
+                    .andCreatorEqualTo(loginuser.getId())
+                    .andTypeEqualTo(2)
+                    .andStatusEqualTo(1);
+            List<Operate> operates= operateMapper.selectByExample(operateExample);
+            List<Long> comments=operates.stream().map(operate -> operate.getParentId()).collect(Collectors.toList());
+            commentDTOS = commentDTOS.stream().map(commentDto -> {
+                if(comments.contains(commentDto.getId()))
+                    commentDto.setStatus(1);
+                else commentDto.setStatus(0);
+                return commentDto;
+            }).collect(Collectors.toList());
+        }
         return commentDTOS;
     }
 

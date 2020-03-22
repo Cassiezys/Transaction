@@ -1,12 +1,10 @@
 package com.cassiezys.transaction.service;
 
 import com.cassiezys.transaction.enums.OperateTypeEnum;
+import com.cassiezys.transaction.mapper.CommentExtMapper;
 import com.cassiezys.transaction.mapper.OperateMapper;
 import com.cassiezys.transaction.mapper.ProductionExtMapper;
-import com.cassiezys.transaction.model.Operate;
-import com.cassiezys.transaction.model.OperateExample;
-import com.cassiezys.transaction.model.Production;
-import com.cassiezys.transaction.model.User;
+import com.cassiezys.transaction.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +21,9 @@ public class OperateService {
     OperateMapper operateMapper;
     @Autowired
     ProductionExtMapper productionExtMapper;
+    @Autowired
+    CommentExtMapper commentExtMapper;
+
     public void modifyFavor(Long pid, User user,int status)
     {
         if(status==1){
@@ -76,4 +77,59 @@ public class OperateService {
 
     }
 
+    /**
+     * 更改评论的点赞状态
+     * @param cid
+     * @param user
+     * @param status
+     */
+    public void modifyThumbs(Long cid, User user, int status) {
+        if(status==1){
+            //增加评论的点赞数
+            Comment comment=new Comment();
+            comment.setId(cid);
+            comment.setLikeCount(1);
+            commentExtMapper.incLikeCount(comment);
+
+            OperateExample operateExample = new OperateExample();
+            operateExample.createCriteria()
+                    .andCreatorEqualTo(user.getId())
+                    .andParentIdEqualTo(cid);
+            List<Operate> operates = operateMapper.selectByExample(operateExample);
+            if(operates.size()==0){
+                //添加数据库
+                Operate operate=new Operate();
+                operate.setParentId(cid);
+                operate.setType(OperateTypeEnum.typeOf("点赞"));
+                operate.setCreator(user.getId());
+                operate.setGmtCreate(System.currentTimeMillis());
+                operate.setGmtModified(operate.getGmtCreate());
+                operate.setStatus(1);
+                operateMapper.insert(operate);
+            }else{
+                //修改而已
+                operates.get(0).setGmtModified(System.currentTimeMillis());
+                operates.get(0).setStatus(1);
+                operateMapper.updateByPrimaryKeySelective(operates.get(0));
+            }
+        }
+        else{
+            //删除评论欢迎度
+            Comment comment=new Comment();
+            comment.setId(cid);
+            comment.setLikeCount(-1);
+            commentExtMapper.incLikeCount(comment);
+
+            //更改数据库状态
+            Operate operate= new Operate();
+            operate.setGmtModified(System.currentTimeMillis());
+            operate.setStatus(0);
+            OperateExample operateExample = new OperateExample();
+            operateExample.createCriteria()
+                    .andCreatorEqualTo(user.getId())
+                    .andParentIdEqualTo(cid);
+
+            operateMapper.updateByExampleSelective(operate,operateExample);
+        }
+    }
 }

@@ -138,12 +138,21 @@
                             <div th:text="${comment.content}"></div>
                             <!--功能区-->
                             <div class="comment-func">
-                                <span class="glyphicon glyphicon-thumbs-up icon"></span>
-                                <span class="comment-func-second" th:data-id="${comment.id}"
-                                      onclick="secondComment(this)">
+                                <div class="comment-func-icon">
+                                    <span  class="comment-func-second" th:data-id="${comment.id}" th:classappend="${comment.status==1?'color':''}" th:id="${'thumb-'+comment.id}"
+                                           onclick="addThumbs(this)">
+                                    <span class="glyphicon glyphicon-thumbs-up icon">
+                                    <span class="comment-number" th:id="${'thumbnum-'+comment.id}" th:text="${comment.likeCount}"></span></span>
+                                </span>
+                                </div>
+                                <div class="comment-func-icon">
+                                    <span class="comment-func-second" th:data-id="${comment.id}"
+                                          onclick="secondComment(this)">
                                     <span class="glyphicon glyphicon-comment"></span>
                                     <span class="comment-number" th:text="${comment.commentCount}"></span>
                                 </span>
+                                </div>
+
                                 <span class="pull-right"
                                       th:text="${#dates.format(comment.gmtCreate,'yyyy-MM-dd')}"></span>
                             </div>

@@ -9,4 +9,12 @@ public interface CommentExtMapper {
      * @return
      */
     int incCommentCount(Comment comment);
+
+    /**
+     * 自增评论的点赞数
+     * @param comment
+     * @return
+     */
+    int incLikeCount(Comment comment);
+
 }

@@ -12,6 +12,13 @@
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
   </resultMap>
+
+  <update id="incLikeCount" parameterType="com.cassiezys.transaction.model.Comment">
+    update comment
+    set like_count = like_count + #{likeCount,jdbcType=INTEGER}
+    where id = #{id}
+  </update>
+
   <update id="incCommentCount" parameterType="com.cassiezys.transaction.model.Comment">
     update comment
     set comment_count = comment_count + #{commentCount,jdbcType=INTEGER}

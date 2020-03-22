@@ -17,7 +17,9 @@ public class CommentDTO {
     private Long commentator;
     private Long gmtCreate;
     private Long gmtModified;
-    private Long likeCount;
+    private Integer likeCount;
     private String Content;
+
     private User user;
+    private int status;//赞的状态
 }

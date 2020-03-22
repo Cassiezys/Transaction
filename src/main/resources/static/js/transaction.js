@@ -97,6 +97,7 @@ function secondComment(e) {
     var commentfuc = $("#comment-"+id);
     if(commentfuc.hasClass("in")){
         commentfuc.removeClass("in");
+        e.classList.remove("active");
         commentfuc.empty();
     }else{
         //获取该评论的回复+展开二级评论区
@@ -137,8 +138,8 @@ function secondComment(e) {
            dataType: "json"
         });
         commentfuc.addClass("in");
+        e.classList.add("active");
     }
-
 }
 function addFavor(e){
     var pid = e.getAttribute("data-id");
@@ -164,6 +165,48 @@ function addFavor(e){
         success: function (ret) {
             console.log("working"+ret);
 
+            if(ret.code == 5000){
+                var login = confirm(ret.message);
+                if(login){
+                    //确定登录
+                    window.open("http://localhost:8222/login");
+                    //来记录关闭该open打开的窗口
+                    window.localStorage.setItem("toclose",true);
+                }
+            }else{
+                alert(ret.code+ret.message);
+            }
+        },
+        dataType:"json"
+    })
+}
+function addThumbs(e){
+    var cid = e.getAttribute("data-id");
+    var icon=$("#thumb-"+cid);
+    var thumbsnum=$("#thumbnum-"+cid);
+    var numVal = parseInt(thumbsnum.text());
+    var status =0;
+    if(icon.hasClass("color")){
+        console.log("yese");
+        icon.removeClass("color");
+        thumbsnum.text(--numVal);
+        status =0;
+    }else{
+        console.log(icon);
+        icon.addClass("color");
+        thumbsnum.text(++numVal);
+        status =1;
+    }
+    console.log(status);
+    $.ajax({
+        type:"GET",
+        url:"/comment/modifyThumbs/"+cid+"/"+status,
+        data:{
+            "pid":cid,
+            "status":status
+        },
+        contentType:'application/json',
+        success: function (ret) {
             if(ret.code == 5000){
                 var login = confirm(ret.message);
                 if(login){

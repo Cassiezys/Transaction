@@ -360,6 +360,17 @@
     font-size: 15px;
     cursor: pointer;
 }
+.comment-func-icon{
+    display: inline-flex;
+    margin-right: 18px;
+}
+.comment-func-icon .active{
+    color: #499ef3;
+}
+.color{
+    color: #499ef3;
+}
+
 .comment-func .active{
     color: #499ef3;
 }

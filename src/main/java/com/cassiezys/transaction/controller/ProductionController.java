@@ -41,7 +41,7 @@ public class ProductionController {
     private OperateService operateService;
 
     /**
-     * 添加收藏
+     * 修改收藏状态
      * @param pid 商品id
      * @param request
      * @return
@@ -80,7 +80,7 @@ public class ProductionController {
             ProductionDTO productionDTO = productionService.findByPid(user,proid);
             List<String> pics = Arrays.asList(productionDTO.getPicUrl().split(";"));
             List<ProductionDTO> relatedProdtos = productionService.findRelated(productionDTO);
-            List<CommentDTO> commentdtos = commentService.findByTargetId(proid, CommentTypeEnum.QUESTION);
+            List<CommentDTO> commentdtos = commentService.findByTargetId(user, proid, CommentTypeEnum.QUESTION);
             productionService.incView(proid);
             model.addAttribute("pics",pics);
             model.addAttribute("commentdtos",commentdtos);

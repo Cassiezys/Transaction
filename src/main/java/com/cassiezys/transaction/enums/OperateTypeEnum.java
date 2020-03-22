@@ -1,7 +1,8 @@
 package com.cassiezys.transaction.enums;
 
 public enum OperateTypeEnum {
-    Favorite(1,"收藏");
+    Favorite(1,"收藏"),
+    ThumbsUp(2,"点赞")
 
     ;
     private int type;

@@ -8,6 +8,7 @@ import com.cassiezys.transaction.exception.ErrorCodeEnumImp;
 import com.cassiezys.transaction.model.Comment;
 import com.cassiezys.transaction.model.User;
 import com.cassiezys.transaction.service.CommentService;
+import com.cassiezys.transaction.service.OperateService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import java.util.List;
 public class CommentController {
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private OperateService operateService;
 
     /**
      * 写评论
@@ -49,7 +52,7 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setCommentator(user.getId());
-        comment.setLikeCount(0L);
+        comment.setLikeCount(0);
         comment.setCommentCount(0);
         commentService.addComment(comment,user);
 
@@ -65,7 +68,20 @@ public class CommentController {
     @ResponseBody
     @GetMapping(value = "/comment/{id}")
     public ResultDTO<List<CommentDTO>> commentList(@PathVariable(name = "id")Long id){
-        List<CommentDTO> commentdtos = commentService.findByTargetId(id, CommentTypeEnum.COMMENT);
+        List<CommentDTO> commentdtos = commentService.findByTargetId(null,id, CommentTypeEnum.COMMENT);
         return ResultDTO.successOf(commentdtos);
+    }
+
+    @ResponseBody
+    @GetMapping("/comment/modifyThumbs/{cid}/{status}")
+    public Object modifyThumbs(@PathVariable(name = "cid")Long cid,
+                              @PathVariable(name = "status")int status,
+                              HttpServletRequest request){
+        User user=(User)request.getSession().getAttribute("user");
+        if(user==null){
+            return ResultDTO.errorOf(ErrorCodeEnumImp.NO_LOGIN);
+        }
+        operateService.modifyThumbs(cid,user,status);
+        return ResultDTO.successOf();
     }
 }
