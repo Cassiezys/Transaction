@@ -31,6 +31,23 @@
     max-height: 178px;
 }
 
+.prods-favor{
+    border-bottom: 1px solid #eaeaea;
+    max-height: 100px;
+}
+.prods-favor img{
+    max-width: 145px;
+    padding: 5px 5px 5px 20px;
+    width: auto;
+    border-radius: 5px;
+    height: auto;
+    max-height: 100px;
+}
+.prods-favor .caption{
+    display: inline-block;
+    position: absolute;
+    margin: 0 10px;
+}
 .prods .caption {
     display: inline-block;
     position: absolute;

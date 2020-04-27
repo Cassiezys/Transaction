@@ -18,6 +18,7 @@ public class PaginationDTO<T> {
     private boolean showNext;
     private boolean showEndPage;
     private Integer totalPage;
+    private String category;
     private Integer page;
     private List<Integer> pages = new ArrayList<>();
 

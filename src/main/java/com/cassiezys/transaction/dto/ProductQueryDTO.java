@@ -12,4 +12,5 @@ public class ProductQueryDTO {
     private Integer page;
     private Integer size;
     private String keyword;
+    private String category;
 }

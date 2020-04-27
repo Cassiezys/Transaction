@@ -2,6 +2,7 @@ package com.cassiezys.transaction.service;
 
 import com.cassiezys.transaction.dto.OrderDTO;
 import com.cassiezys.transaction.dto.PaginationDTO;
+import com.cassiezys.transaction.dto.ProductionDTO;
 import com.cassiezys.transaction.enums.NoticifacionStatusEnum;
 import com.cassiezys.transaction.enums.NotificationTypeEnum;
 import com.cassiezys.transaction.enums.OrderStatusEnum;
@@ -165,6 +166,7 @@ public class OrderService {
         return  paginationDTO;
     }
 
+
     /**
      * 创建新订单
      * @param uid 买家id
@@ -284,7 +286,7 @@ public class OrderService {
         notificationMapper.insert(notification);
     }
 
-    /** A B C
+    /** 添加通知：A B C
      * @param notifier A B
      * @param thisProdt C
      * @param notiType
@@ -301,4 +303,5 @@ public class OrderService {
         notification.setStatus(NoticifacionStatusEnum.UNREAD.getStatus());
         return notification;
     }
+
 }

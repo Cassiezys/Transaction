@@ -3,6 +3,8 @@ package com.cassiezys.transaction.service;
 import com.cassiezys.transaction.dto.PaginationDTO;
 import com.cassiezys.transaction.dto.ProductQueryDTO;
 import com.cassiezys.transaction.dto.ProductionDTO;
+import com.cassiezys.transaction.enums.OperateStatusEnum;
+import com.cassiezys.transaction.enums.OperateTypeEnum;
 import com.cassiezys.transaction.exception.CustomizeCodeException;
 import com.cassiezys.transaction.exception.ErrorCodeEnumImp;
 import com.cassiezys.transaction.mapper.OperateMapper;
@@ -25,6 +27,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -128,22 +131,32 @@ public class ProductionService {
 
 
     /**
-     * 所有包含keyword商品的page页
+     * 所有包含keyword或者是category类别商品的page页
+     *
+     * @param category
+     * @param keyword
      * @param page
      * @param size
      * @return
      */
-    public PaginationDTO<ProductionDTO> addPagination(String keyword, Integer page, Integer size) {
+    public PaginationDTO<ProductionDTO> addPagination(String category, String keyword, Integer page, Integer size) {
         PaginationDTO<ProductionDTO> paginationDTO = new PaginationDTO<>();
         ProductQueryDTO productQueryDTO = new ProductQueryDTO();
+        if(!StringUtils.isBlank(category)){
+            productQueryDTO.setCategory(category);
+            paginationDTO.setCategory(category);
+        }else{
+            productQueryDTO.setCategory(null);
+            paginationDTO.setCategory("全部");
+        }
         if(!StringUtils.isBlank((keyword))){
             keyword= StringUtils.replace(keyword," ","|");
-            System.out.println(keyword);
         }else{
             keyword=null;
         }
         productQueryDTO.setKeyword(keyword);
         int totalPro = productionExtMapper.countByQuery(productQueryDTO);
+        if(totalPro == 0) return paginationDTO;
         if (totalPro % size ==0){
             paginationDTO.setTotalPage(totalPro / size);
         }else{
@@ -290,6 +303,40 @@ public class ProductionService {
         production.setId(proid);
         production.setViewCount(1);
         productionExtMapper.incViewCount(production);
+    }
+
+
+    /**
+     * 我收藏的商品
+     * @param id
+     * @return
+     */
+    public PaginationDTO<ProductionDTO> addFavoritePaginationByUid(Long id) {
+        PaginationDTO<ProductionDTO> paginationDTO = new PaginationDTO<>();
+        paginationDTO.setPage(0);
+        OperateExample operateExample = new OperateExample();
+        operateExample.createCriteria()
+                .andTypeEqualTo(OperateTypeEnum.Favorite.getType())
+                .andStatusEqualTo(OperateStatusEnum.LIGHT_UP.getStatus())
+                .andCreatorEqualTo(id);
+        List<Operate> operates = operateMapper.selectByExample(operateExample);
+        if(operates.isEmpty()){
+            return paginationDTO;
+        }
+        List<ProductionDTO> productionDTOS = operates.stream().map(operate->{
+            Production production = productionMapper.selectByPrimaryKey(operate.getParentId());
+            if(production==null){
+                throw new CustomizeCodeException(ErrorCodeEnumImp.PRODUCTION_NOT_FOUND);
+            }
+            ProductionDTO productionDTO = new ProductionDTO();
+            BeanUtils.copyProperties(production,productionDTO);
+            if(productionDTO.getPicUrl().contains(";")){
+                productionDTO.setPicUrl(productionDTO.getPicUrl().substring(0,productionDTO.getPicUrl().indexOf(";")));
+            }
+            return productionDTO;
+        }).collect(Collectors.toList());
+        paginationDTO.setDataDtos(productionDTOS);
+        return paginationDTO;
     }
 }
 

@@ -46,6 +46,9 @@
             <if test="keyword!=null">
                 and title regexp #{keyword}
             </if>
+            <if test="category!=null">
+                and category = #{category}
+            </if>
         </where>
     </select>
 
@@ -53,6 +56,9 @@
         select * from production where amount!=0
         <if test="keyword!=null">
             and title regexp #{keyword}
+        </if>
+        <if test="category!=null">
+            and category = #{category}
         </if>
         order by gmt_modified desc limit #{page},#{size}
     </select>

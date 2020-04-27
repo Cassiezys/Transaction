@@ -68,6 +68,11 @@ public class ProfileController {
             model.addAttribute("section","cart");
             model.addAttribute("sectionName","我的购物车");
             model.addAttribute("paginationdto",paginationDTO);
+        }else if("favorites".equals(action)){
+            PaginationDTO<ProductionDTO> paginationDTO = productionService.addFavoritePaginationByUid(user.getId());
+            model.addAttribute("section","favorites");
+            model.addAttribute("sectionName","我的收藏");
+            model.addAttribute("paginationdto",paginationDTO);
         }
 
         return "profile";

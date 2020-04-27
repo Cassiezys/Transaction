@@ -24,7 +24,7 @@
                         <img th:src="${'/'+production.picUrl}" alt="">
                         <div class="caption">
                             <!--http://localhost:8222/prodction/1-->
-                            <h3><a th:href="@{'/production/'+${production.id}}"
+                            <h3><a th:href="@{'/production/details/'+${production.id}}"
                                    th:text="${production.title}">同济七版上下册</a></h3>
                             &nbsp;&nbsp; ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp;
                             发布者：<span th:text="${production.user.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span
@@ -90,6 +90,28 @@
                                    th:text="${notification.outerTitle}"></a>
                                 <span class="label label-danger" th:if="${notification.status == 0}">未读</span>
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--我的收藏-->
+            <div class="col-lg-12 col-md-12 col-sm-12" th:if="${section == 'favorites'}">
+                <div class="list-group">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">分类·全部</h3>
+                    </div>
+                    <div class="prods-favor" th:each="production:${paginationdto.dataDtos}">
+                        <img th:src="${'/'+production.picUrl}" alt="">
+                        <div class="caption">
+                            <h3><a th:href="@{'/production/details/'+${production.id}}"
+                                   th:text="${production.title}">同济七版上下册</a></h3>
+                            <div>
+                                &nbsp;&nbsp; ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp; 时间：<span
+                                    th:text="${#dates.format(production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+                                库存：<span th:text="${production.amount}"> 77</span>
+                            </div>
+
                         </div>
                     </div>
                 </div>

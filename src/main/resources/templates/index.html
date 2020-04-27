@@ -27,66 +27,72 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">分类</h3>
                 </div>
-                <a href="#" class="list-group-item active">
+                <a href="/" class="list-group-item active">
                     全部
                 </a>
-                <a href="#" class="list-group-item">手机</a>
-                <a href="#" class="list-group-item">电脑</a>
-                <a href="#" class="list-group-item">配件</a>
-                <a href="#" class="list-group-item">电器</a>
-                <a href="#" class="list-group-item">书籍</a>
-                <a href="#" class="list-group-item">娱乐</a>
-                <a href="#" class="list-group-item">运动</a>
-                <a href="#" class="list-group-item">活动</a>
+                <a href="/?category=手机" class="list-group-item">手机</a>
+                <a href="/?category=电脑" class="list-group-item">电脑</a>
+                <a href="/?category=配件" class="list-group-item">配件</a>
+                <a href="/?category=电器" class="list-group-item">电器</a>
+                <a href="/?category=书籍" class="list-group-item">书籍</a>
+                <a href="/?category=娱乐" class="list-group-item">娱乐</a>
+                <a href="/?category=运动" class="list-group-item">运动</a>
+                <a href="/?category=活动" class="list-group-item">活动</a>
             </div>
         </div>
 
         <!--商品：内容-->
         <div class="col-sm-8 col-md-8">
-            <div class="list-group">
-                <div class="panel-heading">
-                    <h3 class="panel-title">分类·全部</h3>
-                </div>
-                <div class="prods" th:each="production:${paginationdto.dataDtos}">
-                    <div class="picCover">
-                        <img th:src="${production.picUrl}" alt="">
-                    </div>
-                    <div class="caption">
-                        <!--http://localhost:8222/prodction/1-->
-                        <h3><a th:href="@{'/production/details/'+${production.id}}" th:text="${production.title}">同济七版上下册</a></h3>
-                      &nbsp;&nbsp;  ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp; 发布者：<span th:text="${production.user.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span th:text="${#dates.format(production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
-                        &nbsp;·&nbsp;&nbsp;收藏数：<span th:text="${production.likeCount}"></span>
-                    </div>
-                </div>
+            <div class="panel-heading">
+                <h3 class="panel-title">分类·<span th:text="${paginationdto.category}"></span></h3>
             </div>
-            <!--分页-->
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li>
-                        <a th:if="${paginationdto.showFirstPage}" th:href="@{/(page = 1)}"  aria-label="Previous">
-                            <span aria-hidden="true">&lt;&lt;</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a th:if="${paginationdto.showPrevious}" th:href="@{/(page = ${paginationdto.page}-1)}"  aria-label="Previous">
-                            <span aria-hidden="true">&lt;</span>
-                        </a>
-                    </li>
-                    <li th:each="page:${paginationdto.pages}" th:class="${paginationdto.page == page}? 'active' : ''">
-                        <a th:href="@{/(page = ${page})}" th:text="${page}"></a></li>
+            <div th:if="${paginationdto.dataDtos == null}">
+                暂时还没有该类商品~
+            </div>
+            <div  th:else>
+                <div class="list-group">
+                    <div class="prods" th:each="production:${paginationdto.dataDtos}">
+                        <div class="picCover">
+                            <img th:src="${production.picUrl}" alt="">
+                        </div>
+                        <div class="caption">
+                            <!--http://localhost:8222/prodction/1-->
+                            <h3><a th:href="@{'/production/details/'+${production.id}}" th:text="${production.title}">同济七版上下册</a></h3>
+                            &nbsp;&nbsp;  ￥<span th:text="${production.price}"> 77</span> &nbsp; · &nbsp;&nbsp;&nbsp; 发布者：<span th:text="${production.user.name}">曾念念</span> &nbsp; ·&nbsp;&nbsp;&nbsp; 时间：<span th:text="${#dates.format(production.gmtCreate, 'dd/MMM/yyyy HH:mm')}"></span>
+                            &nbsp;·&nbsp;&nbsp;收藏数：<span th:text="${production.likeCount}"></span>
+                        </div>
+                    </div>
+                </div>
+                <!--分页-->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li>
+                            <a th:if="${paginationdto.showFirstPage}" th:href="@{/(page = 1)}"  aria-label="Previous">
+                                <span aria-hidden="true">&lt;&lt;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:if="${paginationdto.showPrevious}" th:href="@{/(page = ${paginationdto.page}-1)}"  aria-label="Previous">
+                                <span aria-hidden="true">&lt;</span>
+                            </a>
+                        </li>
+                        <li th:each="page:${paginationdto.pages}" th:class="${paginationdto.page == page}? 'active' : ''">
+                            <a th:href="@{/(page = ${page})}" th:text="${page}"></a></li>
 
-                    <li>
-                        <a th:if="${paginationdto.showNext}" th:href="@{/(page = ${paginationdto.page}+1)}" aria-label="Next">
-                            <span aria-hidden="true">&gt;</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a th:if="${paginationdto.showEndPage}" th:href="@{/(page = ${paginationdto.totalPage})}" aria-label="Next">
-                            <span aria-hidden="true">&gt;&gt;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+                        <li>
+                            <a th:if="${paginationdto.showNext}" th:href="@{/(page = ${paginationdto.page}+1)}" aria-label="Next">
+                                <span aria-hidden="true">&gt;</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:if="${paginationdto.showEndPage}" th:href="@{/(page = ${paginationdto.totalPage})}" aria-label="Next">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </div>
         </div>
     </div>
 </div>
