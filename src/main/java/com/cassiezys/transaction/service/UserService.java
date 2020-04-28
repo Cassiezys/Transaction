@@ -63,4 +63,36 @@ public class UserService {
         }
     }
 
+
+    /**
+     * 新建或更新用户:
+     * 新用户token保持新的
+     * 老用户获得原来的token
+     * @param user
+     */
+    public User createOrUpdate(User user) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria()
+                .andAccountIdEqualTo(user.getAccountId());
+        List<User> users = userMapper.selectByExample(userExample);
+        if(users.size()==0){
+            user.setPassword(user.getAccountId());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(System.currentTimeMillis());
+            userMapper.insert(user);
+        }else{
+            User oldUser = users.get(0);
+            User dbUser = new User();
+            dbUser.setGmtModified(System.currentTimeMillis());
+            dbUser.setAvatarUrl(user.getAvatarUrl());
+            dbUser.setName(user.getName());
+            /* 不为空的时候就更新 在usermapper.xml里面找到的使用方法*/
+            UserExample example = new UserExample();
+            example.createCriteria()
+                    .andIdEqualTo(oldUser.getId());
+            userMapper.updateByExampleSelective(dbUser, example);
+            user.setToken(oldUser.getToken());
+        }
+        return user;
+    }
 }

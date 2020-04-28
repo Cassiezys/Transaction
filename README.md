@@ -8,6 +8,8 @@
 [Mybatis generator plugins](http://mybatis.org/generator/reference/plugins.html)：分页用的是它自带的插件实现的。  
 [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)  
 [支付宝开放平台](https://docs.open.alipay.com/54/103419/)
+[GitHub OAuth 用GitHub账号登陆](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/)  
+[OkHttp Document ](https://square.github.io/okhttp/)  
 ##工具
 [bootstrap](https://v3.bootcss.com/):前端页面  
 [developer tools 热部署](https://docs.spring.io/spring-boot/docs/2.2.3.RELEASE/reference/html/using-spring-boot.html#using-boot-devtools-restart):每次自动启动  

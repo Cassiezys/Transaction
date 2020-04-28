@@ -1,7 +1,23 @@
 .container-fluid {
     margin: 0 90px;
 }
-
+.ologin {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    margin: 0 13px;
+    display: block;
+    background-image: url("../images/github.jpg");
+    background-size: cover;
+}
+.ologina {
+    position: absolute;
+    left: 0;
+    height: 50px;
+    text-decoration: none;
+    width: 50px;
+}
 /*首页*/
 .panel-heading {
     background-color: #a6d2f2;
