@@ -5,7 +5,9 @@ public enum NotificationTypeEnum {
     REPLY_COMMENT(2,"回复了评论"),
     PRODUCT_SELL(3,"购买了商品"),
     PRODUCT_BOOK(4,"下了订单"),
-    PRODUCT_EMPTY(5,"买完了商品")
+    PRODUCT_EMPTY(5,"买完了商品"),
+    PRODUCT_FAVOR(6,"收藏了商品"),
+    COMMENT_FAVOR(7,"点赞了评论"),
     ;
     private int type;
     private String name;

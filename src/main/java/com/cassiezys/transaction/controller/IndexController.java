@@ -48,6 +48,11 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/admin")
+    public String goadmin()
+    {
+        return "admin";
+    }
     /**
      * 注册
      * @param model

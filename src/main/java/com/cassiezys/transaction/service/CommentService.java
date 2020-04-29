@@ -135,7 +135,7 @@ public class CommentService {
             tempComment.setCommentCount(1);
             commentExtMapper.incCommentCount(tempComment);
             //添加有人评论 你的回复的通知
-            Notification notification = createNotification(comment, commentator, thisProdt.getId(), comment.getCommentator(),comment.getContent() , NotificationTypeEnum.REPLY_COMMENT.getType() );
+            Notification notification = createNotification(comment, commentator, thisProdt.getId(), thisComment.getCommentator(),thisProdt.getTitle() , NotificationTypeEnum.REPLY_COMMENT.getType() );
             notificationMapper.insert(notification);
         }
     }

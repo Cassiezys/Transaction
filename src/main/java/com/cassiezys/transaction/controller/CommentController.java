@@ -8,6 +8,7 @@ import com.cassiezys.transaction.exception.ErrorCodeEnumImp;
 import com.cassiezys.transaction.model.Comment;
 import com.cassiezys.transaction.model.User;
 import com.cassiezys.transaction.service.CommentService;
+import com.cassiezys.transaction.service.NotificationService;
 import com.cassiezys.transaction.service.OperateService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +30,8 @@ public class CommentController {
     private CommentService commentService;
     @Autowired
     private OperateService operateService;
+    @Autowired
+    private NotificationService notificationService;
 
     /**
      * 写评论
@@ -72,6 +75,13 @@ public class CommentController {
         return ResultDTO.successOf(commentdtos);
     }
 
+    /**
+     * 点赞评论
+     * @param cid 评论id
+     * @param status 评论是点赞还是不点赞的状态
+     * @param request
+     * @return
+     */
     @ResponseBody
     @GetMapping("/comment/modifyThumbs/{cid}/{status}")
     public Object modifyThumbs(@PathVariable(name = "cid")Long cid,

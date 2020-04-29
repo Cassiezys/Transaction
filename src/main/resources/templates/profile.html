@@ -86,7 +86,7 @@
                         <div class="media-body">
                             <p class="media-heading">
                                 <span th:text="${notification.notifierName + ' ' + notification.typeName + ' '}"></span>
-                                <a th:href="@{'/production/'+${notification.production.id}}"
+                                <a th:href="@{'/notification/'+${notification.id}}"
                                    th:text="${notification.outerTitle}"></a>
                                 <span class="label label-danger" th:if="${notification.status == 0}">未读</span>
                             </p>
@@ -144,7 +144,7 @@
                                         <img th:src="${'/'+order.production.picUrl}" alt="">
                                     </div>
                                     <div class="item-info">
-                                        <a th:href="@{'/production/'+${order.production.id}}"
+                                        <a th:href="@{'/production/details/'+${order.production.id}}"
                                            th:text="${order.production.title}">同济七版上下册</a>
                                     </div>
                                 </div>

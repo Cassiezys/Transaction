@@ -4,12 +4,13 @@ import com.cassiezys.transaction.dto.NotificationDTO;
 import com.cassiezys.transaction.dto.PaginationDTO;
 import com.cassiezys.transaction.enums.NoticifacionStatusEnum;
 import com.cassiezys.transaction.enums.NotificationTypeEnum;
+import com.cassiezys.transaction.enums.OperateTypeEnum;
 import com.cassiezys.transaction.exception.CustomizeCodeException;
 import com.cassiezys.transaction.exception.ErrorCodeEnumImp;
+import com.cassiezys.transaction.mapper.CommentMapper;
 import com.cassiezys.transaction.mapper.NotificationMapper;
-import com.cassiezys.transaction.model.Notification;
-import com.cassiezys.transaction.model.NotificationExample;
-import com.cassiezys.transaction.model.User;
+import com.cassiezys.transaction.mapper.ProductionMapper;
+import com.cassiezys.transaction.model.*;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,10 @@ import java.util.List;
 public class NotificationService {
     @Autowired
     NotificationMapper notificationMapper;
-
+    @Autowired
+    CommentMapper commentMapper;
+    @Autowired
+    ProductionMapper productionMapper;
     /**
      * 当前page页的通知
      * @param id uid  notifierId  建立通知者的id
@@ -41,6 +45,7 @@ public class NotificationService {
         NotificationExample notificationExample = new NotificationExample();
         notificationExample.createCriteria()
                 .andReceiverEqualTo(id);
+        notificationExample.setOrderByClause("gmt_create desc");
         int totalNoti = (int) notificationMapper.countByExample(notificationExample);
         if(totalNoti% size ==0){
             paginationDTO.setTotalPage(totalNoti / size);
@@ -106,4 +111,5 @@ public class NotificationService {
                 .andStatusEqualTo(NoticifacionStatusEnum.UNREAD.getStatus());
         return notificationMapper.countByExample(notificationExample);
     }
+
 }

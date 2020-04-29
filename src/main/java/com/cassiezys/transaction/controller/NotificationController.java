@@ -36,8 +36,10 @@ public class NotificationController {
         NotificationDTO notificationDTO = notificationService.doRead(user, notiId);
 
         if (notificationDTO.getType() == NotificationTypeEnum.REPLY_PRODUCTION.getType()
-                || notificationDTO.getType() == NotificationTypeEnum.REPLY_COMMENT.getType()) {
-            return "redirect:/production/" + notificationDTO.getOuterid();
+                || notificationDTO.getType() == NotificationTypeEnum.REPLY_COMMENT.getType()
+                || notificationDTO.getType() == NotificationTypeEnum.COMMENT_FAVOR.getType()
+                || notificationDTO.getType() == NotificationTypeEnum.PRODUCT_FAVOR.getType()) {
+            return "redirect:/production/details/" + notificationDTO.getOuterid();
         } else
             return "redirect:/";
     }

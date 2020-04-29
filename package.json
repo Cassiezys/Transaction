@@ -1,0 +1,24 @@
+{
+  "name": "transaction",
+  "version": "1.0.0",
+  "description": "[Serving Web Content](https://spring.io/guides/gs/serving-web-content/)  \r [Mybatis](https://mybatis.org/mybatis-3/zh/getting-started.html)  \r [spring boot mybatis](https://mybatis.org/spring-boot-starter/)\r [spring web mvc](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#spring-web)  \r [Mybatis generator plugins](http://mybatis.org/generator/reference/plugins.html)：分页用的是它自带的插件实现的。  \r [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)  \r [支付宝开放平台](https://docs.open.alipay.com/54/103419/)\r [GitHub OAuth 用GitHub账号登陆](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/)  \r [OkHttp Document ](https://square.github.io/okhttp/)  \r ##工具\r [bootstrap](https://v3.bootcss.com/):前端页面  \r [developer tools 热部署](https://docs.spring.io/spring-boot/docs/2.2.3.RELEASE/reference/html/using-spring-boot.html#using-boot-devtools-restart):每次自动启动  \r [Mybatis generator](http://mybatis.org/generator):生成各种版本的mybatis  \r [javaex](http://doc.javaex.cn/javaex/index.html)：商品展示的轮播效果  \r [Sprint lang3 工具包]   \r [moment.js](http://momentjs.cn/):javascript时间处理 \r [lombok]:pom+安装plugins  \r [沙箱支付](https://openhome.alipay.com/platform/appDaily.htm?tab=info)",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.19.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cassiezys/Transaction.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cassiezys/Transaction/issues"
+  },
+  "homepage": "https://github.com/Cassiezys/Transaction#readme"
+}
